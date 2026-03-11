@@ -13,5 +13,5 @@ import java.util.List;
  * @author erika
  */
 public interface IPagoDAO {
-    Pago pagarCitas(List<Cita> citas);
+    Pago pagarCitas(List<Cita> citas,  Long idPsicologo);
 }
