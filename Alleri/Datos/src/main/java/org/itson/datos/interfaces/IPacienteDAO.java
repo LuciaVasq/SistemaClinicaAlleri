@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface IPacienteDAO {
     List<Paciente> obtenerPacientes();
+    Paciente registrarPaciente(Paciente paciente);
 }

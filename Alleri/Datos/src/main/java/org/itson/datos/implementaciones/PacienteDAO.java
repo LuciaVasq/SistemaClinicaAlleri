@@ -20,4 +20,8 @@ public interface PacienteDAO extends JpaRepository<Paciente, Long>, IPacienteDAO
     default List<Paciente> obtenerPacientes() {
         return findAll();
     }
+    @Override
+    default Paciente registrarPaciente(Paciente paciente) {
+        return save(paciente);
+    }
 }

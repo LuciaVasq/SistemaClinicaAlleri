@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface IPsicologoDAO {
     List<Psicologo> obtenerPsicologos();
+    Psicologo registrarPsicologo(Psicologo psicologo);
 }

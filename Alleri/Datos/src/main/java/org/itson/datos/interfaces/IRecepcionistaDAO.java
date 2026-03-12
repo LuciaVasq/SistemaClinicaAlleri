@@ -4,14 +4,12 @@
  */
 package org.itson.datos.interfaces;
 
-import org.itson.dominio.entidades.Cubiculo;
-import java.util.List;
+import org.itson.dominio.entidades.Recepcionista;
 
 /**
  *
- * @author erika
+ * @author pablo
  */
-public interface ICubiculoDAO {
-    List<Cubiculo> obtenerCubiculos();
-    Cubiculo registrarCubiculo(Cubiculo cubiculo);
+public interface IRecepcionistaDAO {
+    Recepcionista registrarRecepcionista(Recepcionista recepcionista);
 }

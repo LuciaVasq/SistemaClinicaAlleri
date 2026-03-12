@@ -20,4 +20,8 @@ public interface CubiculoDAO extends JpaRepository<Cubiculo, Long>, ICubiculoDAO
     default List<Cubiculo> obtenerCubiculos() {
         return findAll();
     }
+    @Override
+    default Cubiculo registrarCubiculo(Cubiculo cubiculo) {
+        return save(cubiculo);
+    }
 }

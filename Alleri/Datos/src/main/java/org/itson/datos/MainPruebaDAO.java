@@ -20,6 +20,16 @@ import org.itson.datos.implementaciones.PagoDAO;
 import org.itson.datos.implementaciones.PsicologoDAO;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import org.itson.datos.implementaciones.RecepcionistaDAO;
+import org.itson.datos.interfaces.IAdeudoDAO;
+import org.itson.datos.interfaces.ICitaDAO;
+import org.itson.datos.interfaces.ICubiculoDAO;
+import org.itson.datos.interfaces.IPacienteDAO;
+import org.itson.datos.interfaces.IPagoDAO;
+import org.itson.datos.interfaces.IPsicologoDAO;
+import org.itson.datos.interfaces.IRecepcionistaDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -40,25 +50,28 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class MainPruebaDAO implements CommandLineRunner {
 
     @Autowired
-    private PsicologoDAO psicologoDAO;
+    private IPsicologoDAO psicologoDAO;
 
     @Autowired
-    private PacienteDAO pacienteDAO;
+    private IPacienteDAO pacienteDAO;
 
     @Autowired
-    private CitaDAO citaDAO;
+    private ICitaDAO citaDAO;
 
     @Autowired
-    private CubiculoDAO cubiculoDAO;
+    private ICubiculoDAO cubiculoDAO;
 
     @Autowired
-    private AdeudoDAO adeudoDAO;
+    private IAdeudoDAO adeudoDAO;
 
     @Autowired
     private PagoDAO pagoDAO;
-
+    
     @Autowired
-    private jakarta.persistence.EntityManager entityManager;
+    private IRecepcionistaDAO recepcionistaDAO;
+
+//    @Autowired
+//    private jakarta.persistence.EntityManager entityManager;
 
     public static void main(String[] args) {
         SpringApplication.run(MainPruebaDAO.class, args);
@@ -66,8 +79,6 @@ public class MainPruebaDAO implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Ayuda");
-
         Adeudo adeudo = new Adeudo();
         adeudo.setTotal(BigDecimal.ZERO);
 
@@ -79,11 +90,11 @@ public class MainPruebaDAO implements CommandLineRunner {
         psicologo.setTelefono("6441111111");
         psicologo.setEstado(Estado.ACTIVO);
         psicologo.setAdeudo(adeudo); 
-        Psicologo psicologoGuardado = psicologoDAO.save(psicologo);
+        Psicologo psicologoGuardado = psicologoDAO.registrarPsicologo(psicologo);
 
         Cubiculo cubiculo = new Cubiculo();
         cubiculo.setNombre("Cubiculo 1");
-        Cubiculo cubiculoGuardado = cubiculoDAO.save(cubiculo);
+        Cubiculo cubiculoGuardado = cubiculoDAO.registrarCubiculo(cubiculo);
 
         Paciente paciente = new Paciente();
         paciente.setNombre("Marisol");
@@ -93,14 +104,17 @@ public class MainPruebaDAO implements CommandLineRunner {
         paciente.setTelefono("6442222222");
         paciente.setEstado(Estado.ACTIVO);
         paciente.setPsicologo(psicologoGuardado);
-        Paciente pacienteGuardado = pacienteDAO.save(paciente);
+        Paciente pacienteGuardado = pacienteDAO.registrarPaciente(paciente);
 
         BigDecimal precioCita = new BigDecimal("100");
         Adeudo adeudoPsicologo = psicologoGuardado.getAdeudo();
         adeudoPsicologo.setTotal(adeudoPsicologo.getTotal().add(precioCita));
-        Adeudo adeudoActualizado = adeudoDAO.save(adeudoPsicologo);
+        Adeudo adeudoActualizado = adeudoDAO.registrarAdeudo(adeudoPsicologo);
 
-        Recepcionista recepcionista = entityManager.find(Recepcionista.class, 1L);
+        Recepcionista recepcionista = new Recepcionista();
+        recepcionista.setUsuario("recep1");
+        recepcionista.setContrasenia("1234");
+        recepcionistaDAO.registrarRecepcionista(recepcionista);
 
         Cita cita = new Cita();
         cita.setFechaHoraInicio(LocalDateTime.now());
@@ -111,7 +125,7 @@ public class MainPruebaDAO implements CommandLineRunner {
         cita.setRecepcionista(recepcionista);
         cita.setCubiculo(cubiculoGuardado);
         cita.setAdeudo(adeudoActualizado);
-        Cita citaGuardada = citaDAO.save(cita);
+        Cita citaGuardada = citaDAO.agendarCita(cita);
 
         Pago pago = new Pago();
         pago.setFechaHora(LocalDateTime.now());

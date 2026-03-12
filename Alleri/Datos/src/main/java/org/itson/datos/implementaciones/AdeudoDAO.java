@@ -54,4 +54,8 @@ public interface AdeudoDAO extends JpaRepository<Adeudo, Long>, IAdeudoDAO {
         save(adeudo);
     }
 
+    @Override
+    default Adeudo registrarAdeudo(Adeudo adeudo) {
+        return save(adeudo);
+    }
 }

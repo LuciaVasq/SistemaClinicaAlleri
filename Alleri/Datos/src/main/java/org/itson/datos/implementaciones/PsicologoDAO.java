@@ -20,4 +20,8 @@ public interface PsicologoDAO extends JpaRepository<Psicologo, Long>, IPsicologo
     default List<Psicologo> obtenerPsicologos() {
         return findAll();
     }
+    @Override
+    default Psicologo registrarPsicologo(Psicologo psicologo) {
+        return save(psicologo);
+    }
 }

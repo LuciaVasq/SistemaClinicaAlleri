@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
  * @author Maryr
  */
 @SpringBootApplication
-@EntityScan(basePackages = "entidades")
+@EntityScan(basePackages = "org.itson.dominio.entidades")
 public class Dominio {
 
     public static void main(String[] args) {

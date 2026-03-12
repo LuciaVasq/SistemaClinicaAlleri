@@ -6,6 +6,7 @@ package org.itson.datos.interfaces;
 
 import org.itson.dominio.entidades.Cita;
 import java.util.List;
+import org.itson.dominio.entidades.Adeudo;
 
 /**
  *
@@ -13,4 +14,5 @@ import java.util.List;
  */
 public interface IAdeudoDAO {
     void actualizarAdeudo(List<Cita> citas, Long idPsicologo);
+    Adeudo registrarAdeudo(Adeudo adeudo);
 }
