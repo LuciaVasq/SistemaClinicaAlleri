@@ -6,17 +6,18 @@
         <artifactId>Alleri</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+    <groupId>org.itson</groupId>
     <artifactId>Datos</artifactId>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>dominio</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.itson</groupId>
+            <artifactId>Dominio</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <properties>
-        <maven.compiler.release>24</maven.compiler.release>
+        <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>org.itson.datos.Datos</exec.mainClass>
     </properties>
 </project>
