@@ -13,6 +13,8 @@
     <modules>
         <module>Dominio</module>
         <module>Datos</module>
+        <module>Negocio</module>
+        <module>DTO</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
