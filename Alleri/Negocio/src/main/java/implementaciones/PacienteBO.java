@@ -7,8 +7,11 @@ package implementaciones;
 import interfaces.IPacienteBO;
 import java.util.List;
 import org.itson.datos.implementaciones.PacienteDAO;
+import org.itson.dominio.entidades.Paciente;
+import org.itson.dto.PacienteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import IMappers.PacienteMapper;
 
 /**
  *
@@ -17,9 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class PacienteBO implements IPacienteBO{
     @Autowired private PacienteDAO pacienteDAO;
+    @Autowired private PacienteMapper pacienteMapper;
 
     @Override
-    public List<org.itson.dto.PacienteDTO> obtenerPacientes() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<PacienteDTO> obtenerPacientes() {
+        List<Paciente> pacientes = pacienteDAO.obtenerPacientes();
+        return pacienteMapper.toCTOPacienteList(pacientes);
     }
 }

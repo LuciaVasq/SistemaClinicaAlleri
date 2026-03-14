@@ -7,9 +7,11 @@ package implementaciones;
 import interfaces.IPsicologoBO;
 import java.util.List;
 import org.itson.datos.interfaces.IPsicologoDAO;
+import org.itson.dominio.entidades.Psicologo;
 import org.itson.dto.PsicologoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import IMappers.PsicologoMapper;
 
 /**
  *
@@ -18,11 +20,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class PsicologoBO implements IPsicologoBO{
     @Autowired private IPsicologoDAO psicologoDAO;
+    
+    @Autowired private PsicologoMapper psicologoMapper;
 
     @Override
     public List<PsicologoDTO> obtenerPsicologos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Psicologo> psicologos = psicologoDAO.obtenerPsicologos();
+        
+        return psicologoMapper.toCTOPsicologoList(psicologos);
     }
-
-    
 }

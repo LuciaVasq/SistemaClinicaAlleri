@@ -22,9 +22,9 @@ public class CitaDTO {
     public UsuarioDTO recepcionista; 
     public PagoDTO pago; 
 
-    public CitaDTO(int id, CubiculoDTO cubicilo, PacienteDTO paciente, PsicologoDTO psicologo, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, BigDecimal precio, UsuarioDTO recepcionista, PagoDTO pago) {
+    public CitaDTO(int id, CubiculoDTO cubiculo, PacienteDTO paciente, PsicologoDTO psicologo, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, BigDecimal precio, UsuarioDTO recepcionista, PagoDTO pago) {
         this.id = id;
-        this.cubicilo = cubicilo;
+        this.cubicilo = cubiculo;
         this.paciente = paciente;
         this.psicologo = psicologo;
         this.fechaHoraInicio = fechaHoraInicio;
@@ -45,11 +45,11 @@ public class CitaDTO {
         this.id = id;
     }
 
-    public CubiculoDTO getCubicilo() {
+    public CubiculoDTO getCubiculo() {
         return cubicilo;
     }
 
-    public void setCubicilo(CubiculoDTO cubicilo) {
+    public void setCubiculo(CubiculoDTO cubicilo) {
         this.cubicilo = cubicilo;
     }
 

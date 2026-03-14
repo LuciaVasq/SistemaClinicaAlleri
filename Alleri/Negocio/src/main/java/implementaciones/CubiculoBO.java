@@ -7,9 +7,11 @@ package implementaciones;
 import interfaces.ICubiculoBO;
 import java.util.List;
 import org.itson.datos.interfaces.ICubiculoDAO;
+import org.itson.dominio.entidades.Cubiculo;
 import org.itson.dto.CubiculoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import IMappers.CubiculoMapper;
 
 /**
  *
@@ -18,9 +20,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class CubiculoBO implements ICubiculoBO{
     @Autowired private ICubiculoDAO cubiculoDAO;
+    @Autowired private CubiculoMapper cubiculoMapper;
+    
     @Override
     public List<CubiculoDTO> obtenerCubiculos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        List<Cubiculo> cubiculos = cubiculoDAO.obtenerCubiculos();
+        
+        return cubiculoMapper.toCTOCubiculoList(cubiculos);
     }
     
 }

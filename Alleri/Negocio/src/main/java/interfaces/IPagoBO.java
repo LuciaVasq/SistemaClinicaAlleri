@@ -13,5 +13,5 @@ import org.itson.dto.PagoDTO;
  * @author erika
  */
 public interface IPagoBO {
-    PagoDTO pagarCitas(List<CitaDTO> citas);
+    PagoDTO pagarCitas(List<CitaDTO> citas, Long idPsicologo);
 }
