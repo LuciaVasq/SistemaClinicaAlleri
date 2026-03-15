@@ -27,4 +27,13 @@ public class PacienteBO implements IPacienteBO{
         List<Paciente> pacientes = pacienteDAO.obtenerPacientes();
         return pacienteMapper.toCTOPacienteList(pacientes);
     }
+
+    @Override
+    public PacienteDTO registrarPaciente(PacienteDTO pacientedto) {
+        if (pacientedto == null) {
+            throw new RuntimeException("No se pudo registrar el paciente con exito.");
+        }
+        Paciente pacienteNuevo = pacienteDAO.registrarPaciente(pacienteMapper.toPaciente(pacientedto));
+        return pacienteMapper.toDTOPaciente(pacienteNuevo);
+    }
 }

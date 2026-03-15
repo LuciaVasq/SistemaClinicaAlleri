@@ -25,7 +25,7 @@
             <version>1.5.5.Final</version>
         </dependency>
     </dependencies>
-<!--    <build>
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -42,7 +42,7 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>-->
+    </build>
     <properties>
         <exec.mainClass>org.itson.negocio.Negocio</exec.mainClass>
     </properties>

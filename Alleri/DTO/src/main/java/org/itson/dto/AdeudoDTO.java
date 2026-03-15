@@ -12,11 +12,11 @@ import java.util.List;
  * @author erika
  */
 public class AdeudoDTO {
-    public int id;
+    public Integer id;
     public BigDecimal total;
     public List<CitaDTO> citas;
 
-    public AdeudoDTO(int id, BigDecimal total, List<CitaDTO> citas) {
+    public AdeudoDTO(Integer id, BigDecimal total, List<CitaDTO> citas) {
         this.id = id;
         this.total = total;
         this.citas = citas;
@@ -25,11 +25,11 @@ public class AdeudoDTO {
     public AdeudoDTO() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

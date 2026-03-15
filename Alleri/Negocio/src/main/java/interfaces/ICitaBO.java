@@ -20,4 +20,5 @@ public interface ICitaBO {
     List<CitaDTO> obtenerCitas(LocalDateTime dia);
     void actualizarAdeudo(List<CitaDTO> citas, Long idPsicologo);
     AdeudoDTO obtenerAdeudo(Long idPsicologo);
+    AdeudoDTO registrarAdeudo(AdeudoDTO adeudo);
 }

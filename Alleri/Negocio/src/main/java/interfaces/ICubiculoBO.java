@@ -13,4 +13,5 @@ import org.itson.dto.CubiculoDTO;
  */
 public interface ICubiculoBO {
     public List<CubiculoDTO> obtenerCubiculos();
+    public CubiculoDTO registrarCubiculo(CubiculoDTO cubiculodto);
 }

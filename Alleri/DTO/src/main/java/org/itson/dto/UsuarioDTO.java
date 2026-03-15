@@ -11,16 +11,16 @@ package org.itson.dto;
 public class UsuarioDTO {
     public int id;
     public String usuario; 
+    public String contrasenia;
 
     public UsuarioDTO() {
     }
 
-    public UsuarioDTO(int id, String usuario) {
+    public UsuarioDTO(int id, String usuario, String contrasenia) {
         this.id = id;
         this.usuario = usuario;
+        this.contrasenia = contrasenia;
     }
-
-   
 
     public int getId() {
         return id;
@@ -37,4 +37,13 @@ public class UsuarioDTO {
     public void setUsuario(String usuario) {
         this.usuario = usuario;
     }
+
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
+    }
+    
 }

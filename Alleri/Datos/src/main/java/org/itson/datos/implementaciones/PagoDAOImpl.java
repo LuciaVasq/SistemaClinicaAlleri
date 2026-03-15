@@ -48,7 +48,6 @@ public class PagoDAOImpl implements IPagoDAO {
         nuevoPago.setTotal(totalACobrar);
         nuevoPago.setFechaHora(LocalDateTime.now());
         nuevoPago.setConcepto("Liquidación de renta acumulada");
-        nuevoPago.setAdeudo(adeudoActual);
         
         // 4- resetear el carrito 
         adeudoActual.setTotal(BigDecimal.ZERO);

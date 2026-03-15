@@ -11,7 +11,7 @@ import Enumeradores.EstadoDTO;
  * @author erika
  */
 public class PsicologoDTO {
-    public int id;
+    public Integer id;
     public String apellidoPaterno;
     public String apellidoMaterno;
     public String nombre;
@@ -23,7 +23,7 @@ public class PsicologoDTO {
     public PsicologoDTO() {
     }
 
-    public PsicologoDTO(int id, String apellidoPaterno, String apellidoMaterno, String nombre, String correo, String telefono, EstadoDTO estado, AdeudoDTO adeudo) {
+    public PsicologoDTO(Integer id, String apellidoPaterno, String apellidoMaterno, String nombre, String correo, String telefono, EstadoDTO estado, AdeudoDTO adeudo) {
         this.id = id;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
@@ -34,11 +34,11 @@ public class PsicologoDTO {
         this.adeudo = adeudo;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -97,6 +97,9 @@ public class PsicologoDTO {
     public void setAdeudo(AdeudoDTO adeudo) {
         this.adeudo = adeudo;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "PsicologoDTO{" + "id=" + id + ", apellidoPaterno=" + apellidoPaterno + ", apellidoMaterno=" + apellidoMaterno + ", nombre=" + nombre + ", correo=" + correo + ", telefono=" + telefono + ", estado=" + estado + ", adeudo=" + adeudo + '}';
+    }
 }

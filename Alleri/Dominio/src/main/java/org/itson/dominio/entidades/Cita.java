@@ -43,6 +43,10 @@ public class Cita {
     @ManyToOne
     @JoinColumn(name = "adeudo_id")
     private Adeudo adeudo;
+    
+    @ManyToOne
+    @JoinColumn(name = "pago_id")
+    private Pago pago;
 
     public Long getId() {
         return id;
@@ -116,4 +120,11 @@ public class Cita {
         this.adeudo = adeudo;
     }
 
+    public Pago getPago() {
+        return pago;
+    }
+
+    public void setPago(Pago pago) {
+        this.pago = pago;
+    }    
 }

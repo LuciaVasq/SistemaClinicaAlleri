@@ -28,5 +28,13 @@ public class CubiculoBO implements ICubiculoBO{
         
         return cubiculoMapper.toCTOCubiculoList(cubiculos);
     }
-    
+
+    @Override
+    public CubiculoDTO registrarCubiculo(CubiculoDTO cubiculodto) {
+        if (cubiculodto == null) {
+            throw new RuntimeException("No se pudo registrar el cubículo con exito.");
+        }
+        Cubiculo cubiculoNuevo = cubiculoDAO.registrarCubiculo(cubiculoMapper.toCubiculo(cubiculodto));
+        return cubiculoMapper.toDTOCubiculo(cubiculoNuevo);
+    }
 }

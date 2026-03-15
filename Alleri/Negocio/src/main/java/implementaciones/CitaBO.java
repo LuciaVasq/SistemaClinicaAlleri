@@ -4,6 +4,7 @@
  */
 package implementaciones;
 
+import IMappers.AdeudoMapper;
 import IMappers.CitaMapper;
 import interfaces.ICitaBO;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.List;
 import org.itson.datos.interfaces.IAdeudoDAO;
 import org.itson.datos.interfaces.ICitaDAO;
 import org.itson.datos.interfaces.ICubiculoDAO;
+import org.itson.dominio.entidades.Adeudo;
 import org.itson.dominio.entidades.Cita;
 import org.itson.dto.AdeudoDTO;
 import org.itson.dto.CitaDTO;
@@ -33,6 +35,9 @@ public class CitaBO implements ICitaBO {
     
     @Autowired
     private CitaMapper citaMapper;
+    
+    @Autowired
+    private AdeudoMapper adeudoMapper;
 
     @Override
     public CitaDTO agendarCita(CitaDTO nuevaCita) {
@@ -99,9 +104,15 @@ public class CitaBO implements ICitaBO {
         adeudoDAO.actualizarAdeudo(citas, idPsicologo);
     }
 
-    //Falta este metodo en CitaDAO
     @Override
     public AdeudoDTO obtenerAdeudo(Long idPsicologo) {
-        return null;
+        Adeudo adeudo = adeudoDAO.obtenerAdeudo(idPsicologo);
+        return adeudoMapper.toDTOAdeudo(adeudo);
+    }
+
+    @Override
+    public AdeudoDTO registrarAdeudo(AdeudoDTO adeudo) {
+        Adeudo adeudoNuevo = adeudoDAO.registrarAdeudo(adeudoMapper.toAdeudo(adeudo));
+        return adeudoMapper.toDTOAdeudo(adeudoNuevo);
     }
 }

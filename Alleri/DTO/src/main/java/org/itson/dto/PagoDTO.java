@@ -14,39 +14,41 @@ import java.util.List;
  * @author erika
  */
 public class PagoDTO {
-    public int id; 
-    public LocalDateTime fehcaHora;
+    public Integer id; 
+    public LocalDateTime fechaHora;
     public BigDecimal total;
     public String concepto;
     public MetodoPagoDTO metodoPago;
     public List<CitaDTO> citas;
+    public PsicologoDTO psicologo;
 
     public PagoDTO() {
     }
 
-    public PagoDTO(int id, LocalDateTime fehcaHora, BigDecimal total, String concepto, MetodoPagoDTO metodoPago, List<CitaDTO> citas) {
+    public PagoDTO(Integer id, LocalDateTime fechaHora, BigDecimal total, String concepto, MetodoPagoDTO metodoPago, List<CitaDTO> citas, PsicologoDTO psicologo) {
         this.id = id;
-        this.fehcaHora = fehcaHora;
+        this.fechaHora = fechaHora;
         this.total = total;
         this.concepto = concepto;
         this.metodoPago = metodoPago;
         this.citas = citas;
+        this.psicologo = psicologo;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public LocalDateTime getFehcaHora() {
-        return fehcaHora;
+    public LocalDateTime getFechaHora() {
+        return fechaHora;
     }
 
-    public void setFehcaHora(LocalDateTime fehcaHora) {
-        this.fehcaHora = fehcaHora;
+    public void setFechaHora(LocalDateTime fechHora) {
+        this.fechaHora = fechHora;
     }
 
     public BigDecimal getTotal() {
@@ -56,7 +58,7 @@ public class PagoDTO {
     public void setTotal(BigDecimal total) {
         this.total = total;
     }
-
+ 
     public String getConcepto() {
         return concepto;
     }
@@ -79,6 +81,14 @@ public class PagoDTO {
 
     public void setCitas(List<CitaDTO> citas) {
         this.citas = citas;
+    }
+
+    public PsicologoDTO getPsicologo() {
+        return psicologo;
+    }
+
+    public void setPsicologo(PsicologoDTO psicologo) {
+        this.psicologo = psicologo;
     }
     
     

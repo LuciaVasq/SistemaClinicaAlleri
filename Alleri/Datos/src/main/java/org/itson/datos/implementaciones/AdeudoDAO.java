@@ -58,4 +58,9 @@ public interface AdeudoDAO extends JpaRepository<Adeudo, Long>, IAdeudoDAO {
     default Adeudo registrarAdeudo(Adeudo adeudo) {
         return save(adeudo);
     }
+    
+    @Override
+    default Adeudo obtenerAdeudo(Long idPsicologo) {
+        return findByPsicologoId(idPsicologo).orElse(new Adeudo());
+    }
 }

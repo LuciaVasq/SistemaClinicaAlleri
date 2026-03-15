@@ -25,9 +25,6 @@ public class Adeudo {
     @OneToMany(mappedBy = "adeudo")
     private List<Cita> citas;
 
-    @OneToMany(mappedBy = "adeudo", cascade = CascadeType.ALL)
-    private List<Pago> pagos;
-
     public Long getId() {
         return id;
     }
@@ -51,13 +48,4 @@ public class Adeudo {
     public void setCitas(List<Cita> citas) {
         this.citas = citas;
     }
-
-    public List<Pago> getPagos() {
-        return pagos;
-    }
-
-    public void setPagos(List<Pago> pagos) {
-        this.pagos = pagos;
-    }
-
 }

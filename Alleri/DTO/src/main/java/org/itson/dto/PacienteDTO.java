@@ -15,7 +15,7 @@ public class PacienteDTO {
     public int id;
     public String apellidoPaterno;
     public String apellidoMaterno;
-    public String nombres;
+    public String nombre;
     public String correo;
     public String telefono;
     public EstadoDTO estado;
@@ -24,11 +24,11 @@ public class PacienteDTO {
     public PacienteDTO() {
     }
 
-    public PacienteDTO(int id, String apellidoPaterno, String apellidoMaterno, String nombres, String correo, String telefono, EstadoDTO estado, PsicologoDTO psicologo) {
+    public PacienteDTO(int id, String apellidoPaterno, String apellidoMaterno, String nombre, String correo, String telefono, EstadoDTO estado, PsicologoDTO psicologo) {
         this.id = id;
         this.apellidoPaterno = apellidoPaterno;
         this.apellidoMaterno = apellidoMaterno;
-        this.nombres = nombres;
+        this.nombre = nombre;
         this.correo = correo;
         this.telefono = telefono;
         this.estado = estado;
@@ -59,12 +59,12 @@ public class PacienteDTO {
         this.apellidoMaterno = apellidoMaterno;
     }
 
-    public String getNombres() {
-        return nombres;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public String getCorreo() {

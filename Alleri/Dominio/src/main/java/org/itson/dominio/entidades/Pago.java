@@ -8,6 +8,7 @@ import org.itson.dominio.enumeradores.MetodoPago;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  *
@@ -28,17 +29,13 @@ public class Pago {
     @Enumerated(EnumType.STRING)
     private MetodoPago metodoPago;
 
-    @ManyToOne
-    @JoinColumn(name = "adeudo_id", nullable = false)
-    private Adeudo adeudo;
+    @OneToMany(mappedBy = "pago")
+    private List<Cita> citas;
+    
 
     @ManyToOne
     @JoinColumn(name = "psicologo_id", nullable = false)
     private Psicologo psicologo;
-
-    @ManyToOne
-    @JoinColumn(name = "cita_id", nullable = false)
-    private Cita cita;
 
     public Long getId() {
         return id;
@@ -80,14 +77,6 @@ public class Pago {
         this.metodoPago = metodoPago;
     }
 
-    public Adeudo getAdeudo() {
-        return adeudo;
-    }
-
-    public void setAdeudo(Adeudo adeudo) {
-        this.adeudo = adeudo;
-    }
-
     public Psicologo getPsicologo() {
         return psicologo;
     }
@@ -96,12 +85,11 @@ public class Pago {
         this.psicologo = psicologo;
     }
 
-    public Cita getCita() {
-        return cita;
+    public List<Cita> getCitas() {
+        return citas;
     }
 
-    public void setCita(Cita cita) {
-        this.cita = cita;
+    public void setCitas(List<Cita> citas) {
+        this.citas = citas;
     }
-
 }

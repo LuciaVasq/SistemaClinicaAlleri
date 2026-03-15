@@ -13,4 +13,5 @@ import org.itson.dto.PacienteDTO;
  */
 public interface IPacienteBO {
     public List<PacienteDTO> obtenerPacientes();
+    public PacienteDTO registrarPaciente(PacienteDTO pacientedto);
 }

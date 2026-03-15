@@ -29,4 +29,13 @@ public class PsicologoBO implements IPsicologoBO{
         
         return psicologoMapper.toCTOPsicologoList(psicologos);
     }
+
+    @Override
+    public PsicologoDTO registrarPsicologo(PsicologoDTO psicologodto) {
+        if (psicologodto == null) {
+            throw new RuntimeException("No se pudo registrar el psicologo con exito.");
+        }
+        Psicologo psicologoNuevo = psicologoDAO.registrarPsicologo(psicologoMapper.toPsicologo(psicologodto));
+        return psicologoMapper.toDTOPsicologo(psicologoNuevo);
+    }
 }

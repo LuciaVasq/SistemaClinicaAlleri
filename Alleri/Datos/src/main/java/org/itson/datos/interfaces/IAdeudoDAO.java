@@ -15,4 +15,5 @@ import org.itson.dominio.entidades.Adeudo;
 public interface IAdeudoDAO {
     void actualizarAdeudo(List<Cita> citas, Long idPsicologo);
     Adeudo registrarAdeudo(Adeudo adeudo);
+    Adeudo obtenerAdeudo(Long idPsicologo);
 }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  */
 public class CitaDTO {
     public int id; 
-    public CubiculoDTO cubicilo; 
+    public CubiculoDTO cubiculo; 
     public PacienteDTO paciente; 
     public PsicologoDTO psicologo; 
     public LocalDateTime fechaHoraInicio;
@@ -21,10 +21,11 @@ public class CitaDTO {
     public BigDecimal precio;
     public UsuarioDTO recepcionista; 
     public PagoDTO pago; 
+    public AdeudoDTO adeudo;
 
-    public CitaDTO(int id, CubiculoDTO cubiculo, PacienteDTO paciente, PsicologoDTO psicologo, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, BigDecimal precio, UsuarioDTO recepcionista, PagoDTO pago) {
+    public CitaDTO(int id, CubiculoDTO cubiculo, PacienteDTO paciente, PsicologoDTO psicologo, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, BigDecimal precio, UsuarioDTO recepcionista, PagoDTO pago, AdeudoDTO adeudo) {
         this.id = id;
-        this.cubicilo = cubiculo;
+        this.cubiculo = cubiculo;
         this.paciente = paciente;
         this.psicologo = psicologo;
         this.fechaHoraInicio = fechaHoraInicio;
@@ -32,6 +33,7 @@ public class CitaDTO {
         this.precio = precio;
         this.recepcionista = recepcionista;
         this.pago = pago;
+        this.adeudo = adeudo;
     }
 
     public CitaDTO() {
@@ -46,11 +48,11 @@ public class CitaDTO {
     }
 
     public CubiculoDTO getCubiculo() {
-        return cubicilo;
+        return cubiculo;
     }
 
-    public void setCubiculo(CubiculoDTO cubicilo) {
-        this.cubicilo = cubicilo;
+    public void setCubiculo(CubiculoDTO cubiculo) {
+        this.cubiculo = cubiculo;
     }
 
     public PacienteDTO getPaciente() {
@@ -108,6 +110,12 @@ public class CitaDTO {
     public void setPago(PagoDTO pago) {
         this.pago = pago;
     }
-    
-    
+
+    public AdeudoDTO getAdeudo() {
+        return adeudo;
+    }
+
+    public void setAdeudo(AdeudoDTO adeudo) {
+        this.adeudo = adeudo;
+    }
 }
