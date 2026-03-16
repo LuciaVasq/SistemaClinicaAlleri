@@ -1,0 +1,79 @@
+:root {
+  --app-background: #EFE9F5;
+  --alleri-primary: #6B3FA0;
+  --alleri-primary-light: #DAC5ED;
+  --alleri-primary-mid: #C4A8E0;
+  --alleri-bg: #F3EAF9;
+  --alleri-dark: #471861;
+  --alleri-muted: #A880CC;
+  --alleri-magenta: #7a1965;
+  --alleri-magenta-gray:#833a73;
+  --alleri-white: #FAF3FF;
+  --alleri-danger: #c02b53;
+
+  --alleri-radius-sm: 8px;
+  --alleri-radius-md: 12px;
+  --alleri-radius-lg: 16px;
+  --alleri-radius-xl: 20px;
+  --alleri-radius-full: 999px;
+
+
+  --alleri-shadow-sm: 0 2px 12px rgba(107, 63, 160, 0.08);
+  --alleri-shadow-md: 0 8px 32px rgba(107, 63, 160, 0.14);
+  --alleri-shadow-drawer: -8px 0 40px rgba(107, 63, 160, 0.18);
+
+  --alleri-card-bg: #e9bbea;
+  --alleri-card-cancelled: #c0a6db;
+  --alleri-card-divider: rgba(107, 63, 160, 0.15);
+  --alleri-card-shadow: 0 2px 10px rgba(107, 63, 160, 0.10);
+  --alleri-card-shadow-hover: 0 8px 24px rgba(107, 63, 160, 0.20);
+
+  --alleri-badge-paid-bg: #ca86bdc8;
+  --alleri-badge-paid-text: #a03f9e;
+  --alleri-badge-cancel-bg: #7f6895;
+  --alleri-badge-cancel-text: #331b46;
+  --alleri-badge-pending-bg: #f9cea0;
+  --alleri-badge-pending-text: #7A6000;
+
+  --alleri-popup-shadow: 0 24px 64px rgba(45, 27, 78, 0.28);
+  --alleri-popup-overlay: rgba(45, 27, 78, 0.45);
+  --alleri-popup-total-bg: #DAC5ED;
+  --alleri-popup-bg: #CCABDF;
+
+  --alleri-money-color: #88126E;
+  --button-violet-hover: #9660af;
+  --button-edit-bg: #C4A8E0;
+  --button-edit-hover: #9f79c5;
+  --button-edit-text: #471861;
+
+  --button-violet: #6F4686;
+  --button-magenta: #88126E;
+  --button-magenta-hover:#b565a4;
+
+  --alleri-form-bg: #e9bbea;
+  --alleri-magenta-popup: #9c4b87;
+
+
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body,
+html {
+  background-color: var(--app-background);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  width: 100%;
+  font-family: sans-serif;
+}
+
+.app-container {
+  min-height: 100vh;
+  padding: 10px;
+  margin: 0 auto;
+}

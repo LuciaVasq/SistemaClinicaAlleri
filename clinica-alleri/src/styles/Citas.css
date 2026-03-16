@@ -1,0 +1,353 @@
+.citas-programadas-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
+    align-items: center;            
+    max-width: 1500px;         
+    margin: 0 auto;                
+    padding: 20px 40px;             
+    gap: 20px;                     
+}
+
+.btn-programar-cita {
+    background-color: var(--button-violet);       
+    border: none;
+    border-radius: 30px;
+    color: var(--alleri-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 350px;
+    height: 55px;
+}
+
+.btn-programar-cita p {
+    margin: 0;          
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.btn-programar-cita:hover{
+    background-color: var(--button-violet-hover);
+}
+
+.citas-programadas {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(250px, 1fr));
+    gap: 16px;
+    max-width: 1500px;  
+    margin: 0 auto;     
+    padding: 40px; 
+    justify-content: center;
+}
+
+.header span {
+    font-size: 35px;
+    font-weight: 800;
+    color: var(--alleri-dark);
+}
+
+.header p {
+    margin-top: 5px;
+    font-size: 25px;
+    font-weight: 500;
+    color: var(--button-violet);
+}
+
+
+
+.apt-card {
+    background: var(--alleri-card-bg);
+    border-radius: var(--alleri-radius-lg);
+    padding: 20px 20px 18px;
+    cursor: pointer;
+    box-shadow: var(--alleri-card-shadow);
+    position: relative;
+    user-select: none;
+    height: 350px;
+    width: 330px;
+}
+
+.apt-card--cancelled {
+    background: var(--alleri-card-cancelled);
+    opacity: 0.85;
+}
+
+.apt-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.apt-card__title {
+    margin: 0;
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--alleri-dark);
+}
+
+.apt-card__arrow-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--alleri-radius-full);
+    border: 2px solid var(--alleri-primary);
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--alleri-primary);
+    flex-shrink: 0;
+}
+
+.apt-card__info {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.apt-card__info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    height:70px;
+}
+
+.apt-card__label {
+    font-size: 15px;
+    color: var(--alleri-magenta-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 500;
+}
+
+.apt-card__value {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--alleri-dark);
+    margin: 0;
+}
+
+.apt-card__divider {
+    border: none;
+    border-top: 1px solid var(--alleri-card-divider);
+    margin: 0 0 12px;
+}
+
+.apt-card__footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.apt-card__time {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--alleri-magenta);
+    margin: 0;
+}
+
+/* ── Status Badge ── */
+.badge {
+    border-radius: var(--alleri-radius-full);
+    padding: 4px 24px;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.badge--pagado {
+    background: var(--alleri-badge-paid-bg);
+    color: var(--alleri-badge-paid-text);
+}
+
+.badge--cancelado {
+    background: var(--alleri-badge-cancel-bg);
+    color: var(--alleri-badge-cancel-text);
+}
+
+.badge--pendiente {
+    background: var(--alleri-badge-pending-bg);
+    color: var(--alleri-badge-pending-text);
+}
+
+
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--alleri-popup-overlay);
+    backdrop-filter: blur(4px);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    
+}
+
+
+.popup {
+    background: var(--alleri-popup-bg);
+    border-radius: var(--alleri-radius-xl);
+    padding: 32px 28px 28px;
+    box-shadow: var(--alleri-popup-shadow);
+    position: relative;
+    height: 460px;
+    width: 700px;
+}
+
+.popup__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--alleri-radius-full);
+    border: 1.5px solid var(--alleri-primary-mid);
+    background: var(--alleri-primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--alleri-primary);
+}
+
+.popup__header {
+    margin-bottom: 24px;
+}
+
+.popup__cubiculo {
+    margin: 0 0 4px;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--alleri-dark);
+    margin-bottom: 15px;
+}
+
+.popup__date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 20px;
+    color: var(--alleri-primary);
+    font-weight: 500;
+}
+
+.popup__body {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    margin-bottom: 28px;
+}
+
+.popup__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+   padding-left: 30px;
+}
+
+.popup-body-left{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.popup-body-right{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.popup__field-label {
+    font-size: 15px; 
+    color: var(--alleri-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.popup__field-value {
+    font-size: 22px; 
+    font-weight: 700;
+    color: var(--alleri-dark);
+    display: flex;
+    align-items: center;
+    gap: 12px; 
+}
+
+.popup__field-value-hour {
+    font-size: 27px; 
+    font-weight: 700;
+    color: var(--alleri-magenta);
+    display: flex;
+    align-items: center;
+    gap: 12px; 
+}
+.popup__field-icon svg {
+    width: 24px; 
+    height: 24px;
+    color: var(--alleri-primary);
+}
+.popup__total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--alleri-popup-total-bg);
+    border-radius: var(--alleri-radius-md);
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    margin-top: 44px;
+}
+
+.popup__total-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--alleri-dark);
+}
+
+.popup__total-amount {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--alleri-money-color);
+}
+
+.popup__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.popup__btn {
+    padding: 13px 0;
+    border-radius: var(--alleri-radius-full);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s;
+}
+
+.popup__btn--cancel {
+    background: var(--button-magenta);
+    color: var(--alleri-white);
+}
+
+.popup__btn--cancel:hover {
+    background: var(--button-magenta-hover);
+}
+
+.popup__btn--edit {
+    background: var(--button-violet);
+    color: var(--alleri-white);
+}
+
+.popup__btn--edit:hover {
+    background: var(--button-edit-hover);
+}
