@@ -1,0 +1,24 @@
+// llamada al controller de citas
+import { API_BASE_URL } from "./config";
+import type { CitaDTO } from '../types/alleri.types';
+
+export const citaService = {
+
+    // conecta con el endpoint de agendar
+    agendarCita: async (nuevaCita: CitaDTO): Promise<CitaDTO> => {
+        const res = await fetch(`${API_BASE_URL}/citas/agendar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevaCita)
+        });
+        if (!res.ok) throw new Error('Error al agendar la cita')
+        return res.json()
+    },
+
+    obtenerCitasPorDia: async(dia: string): Promise<CitaDTO[]> => {
+        // manda el dia por la url
+        const res = await fetch(`${API_BASE_URL}/citas/obtener?dia=${dia}`)
+        if (!res.ok) throw new Error('Error al obtener las citas')
+        return res.json()
+    }
+}

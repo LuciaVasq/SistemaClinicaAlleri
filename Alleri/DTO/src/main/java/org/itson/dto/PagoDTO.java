@@ -5,6 +5,7 @@
 package org.itson.dto;
 
 import Enumeradores.MetodoPagoDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ public class PagoDTO {
     public BigDecimal total;
     public String concepto;
     public MetodoPagoDTO metodoPago;
+    @JsonIgnore
     public List<CitaDTO> citas;
     public PsicologoDTO psicologo;
 

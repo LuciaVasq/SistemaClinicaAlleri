@@ -1,62 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addLocale } from 'primereact/api';
 import "../styles/ProgramarCita.css";
 import "primereact/resources/primereact.min.css";
 import { AnimatePresence, motion } from "framer-motion";
 import { Calendar } from "primereact/calendar";
+import { useProgramarCita } from "../hooks/useProgramarCita";
+
+const IconClose = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
+)
 
 addLocale('es', {
     firstDayOfWeek: 1,
-    dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
-    dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+    dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+    dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
     dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
-    monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
-    monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+    monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Cctubre', 'Noviembre', 'Diciembre'],
+    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
     today: 'Hoy',
     clear: 'Limpiar'
-});
+})
 
-interface FormData {
-    fecha: Date;
-    horaInicio: string;
-    cubiculo: string;
-    psicologo: string;
-    paciente: string;
-}
 interface ProgramarCitaProps {
-
-    onClose: () => void;
-    onSubmit?: (data: FormData) => void;
+    onClose: () => void
 }
 
 const HORAS = [
     "08:00", "09:00", "10:00", "11:00", "12:00",
     "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00",
-];
-const CUBICULOS = ["Cubículo 1", "Cubículo 2", "Cubículo 3", "Cubículo 4"];
-const PSICOLOGOS = ["María", "Carlos", "Sofía", "Andrés"];
-const PACIENTES = [
-    "Marisol Ruiz Pacheco", "Juan Torres López",
-    "Elena Vargas", "Roberto Hernández",
-];
-
+]
 
 function addHour(time: string): string {
-    const [h, m] = time.split(":").map(Number);
-    const next = (h + 1) % 24;
-    return `${String(next).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    const [h, m] = time.split(":").map(Number)
+    const next = (h + 1) % 24
+    return `${String(next).padStart(2, "0")}:${String(m).padStart(2, "0")}`
 }
-
 
 function CloseIcon() {
     return (
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
-            <path d="M1 1l12 12M13 1L1 13"
-                stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
     );
 }
-
 
 function ConfirmPopup({ onAccept }: { onAccept: () => void }) {
     return (
@@ -76,22 +65,48 @@ function ConfirmPopup({ onAccept }: { onAccept: () => void }) {
     );
 }
 
+export default function ProgramarCita({ onClose }: ProgramarCitaProps) {
 
-export default function ProgramarCita({ onClose, onSubmit }: ProgramarCitaProps) {
-    const [form, setForm] = useState<FormData>({
-        fecha: new Date(),
-        horaInicio: "15:00",
-        cubiculo: "Cubículo 3",
-        psicologo: "María",
-        paciente: "Marisol Ruiz Pacheco",
-    });
+    const {
+        pacientes, psicologos, cubiculos,
+        fecha, setFecha,
+        horaInicio, setHoraInicio,
+        horaFin, setHoraFin,
+        idCubiculo, setIdCubiculo,
+        idPsicologo, setIdPsicologo,
+        idPaciente, setIdPaciente,
+        mostrarConfirmacion, setMostrarConfirmacion,
+        cargando,
+        agendar
+    } = useProgramarCita(onClose)
 
-    const [showConfirm, setShowConfirm] = useState(false);
 
-    const handleAgendar = () => {
-        onSubmit?.(form);
-        setShowConfirm(true);
-    };
+    const handleFechaChange = (e: any) => {
+        if (e.value) {
+            const d = e.value as Date
+            const yyyy = d.getFullYear()
+            const mm = String(d.getMonth() + 1).padStart(2, '0')
+            const dd = String(d.getDate()).padStart(2, '0')
+            setFecha(`${yyyy}-${mm}-${dd}`)
+        }
+    }
+    const fechaCalendario = fecha ? new Date(fecha + "T00:00:00") : null
+
+    const handleHoraInicioChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const nuevaHoraInicio = e.target.value
+        setHoraInicio(nuevaHoraInicio)
+        setHoraFin(addHour(nuevaHoraInicio))
+    }
+
+    useEffect(() => {
+    if (!fecha) { 
+        const hoy = new Date();
+        const yyyy = hoy.getFullYear()
+        const mm = String(hoy.getMonth() + 1).padStart(2, '0')
+        const dd = String(hoy.getDate()).padStart(2, '0')
+        setFecha(`${yyyy}-${mm}-${dd}`)
+    }
+}, [])
 
     return (
         <>
@@ -104,22 +119,21 @@ export default function ProgramarCita({ onClose, onSubmit }: ProgramarCitaProps)
                     {/* Header */}
                     <div className="pc-header">
                         <h2 className="pc-title">Programar cita</h2>
-                        <button className="pc-close-btn" onClick={onClose}>
-                            <CloseIcon />
-                        </button>
+                        <motion.button className="popup__close" whileHover={{ rotate: 90, scale: 1.1 }} whileTap={{ scale: 0.9 }} transition={{ duration: 0.18 }} onClick={onClose}><IconClose /></motion.button>
                     </div>
 
-                    {/* Fecha con PrimeReact */}
+                    {/* Fecha */}
                     <div className="pc-field">
                         <label className="pc-label">Día de la cita</label>
                         <Calendar
-                            value={form.fecha}
-                            onChange={(e) => setForm({ ...form, fecha: e.value as Date })}
+                            value={fechaCalendario}
+                            onChange={handleFechaChange}
                             dateFormat="dd 'de' MM 'de' yy"
                             locale="es"
                             showIcon
                             className="pc-calendar-custom"
-                            readOnlyInput 
+                            readOnlyInput
+                            disabled={cargando}
                         />
                     </div>
 
@@ -129,56 +143,67 @@ export default function ProgramarCita({ onClose, onSubmit }: ProgramarCitaProps)
                         <div className="pc-time-row">
                             <select
                                 className="pc-time-select"
-                                value={form.horaInicio}
-                                onChange={(e) => setForm({ ...form, horaInicio: e.target.value })}
+                                value={horaInicio}
+                                onChange={handleHoraInicioChange}
+                                disabled={cargando}
                             >
                                 {HORAS.map((h) => (
                                     <option key={h} value={h}>{h}</option>
                                 ))}
                             </select>
-                            <span className="pc-time-label">Hora fin</span>
-                            <span className="pc-time-end">{addHour(form.horaInicio)}</span>
+                            <span className="pc-label">Hora fin</span>
+                            <span className="pc-time-end">{horaFin}</span>
                         </div>
                     </div>
 
-                    {/* Cubículo */}
+                    {/* Cubículo (LLENADO DESDE SPRING BOOT) */}
                     <div className="pc-field">
                         <label className="pc-label">Cubículo</label>
                         <select
                             className="pc-select"
-                            value={form.cubiculo}
-                            onChange={(e) => setForm({ ...form, cubiculo: e.target.value })}
+                            value={idCubiculo}                         
+                            onChange={(e) => setIdCubiculo(e.target.value === "" ? "" : Number(e.target.value))}
+                            disabled={cargando}
                         >
-                            {CUBICULOS.map((c) => (
-                                <option key={c} value={c}>{c}</option>
+                            <option value="">Selecciona un cubículo...</option>
+                            {cubiculos.map((c) => (
+                                <option key={c.id} value={c.id}>Cubículo {c.id}</option>
                             ))}
                         </select>
                     </div>
 
-                    {/* Psicólogo */}
+                    {/* Psicólogo (LLENADO DESDE SPRING BOOT) */}
                     <div className="pc-field">
                         <label className="pc-label">Psicólogo</label>
                         <select
                             className="pc-select"
-                            value={form.psicologo}
-                            onChange={(e) => setForm({ ...form, psicologo: e.target.value })}
+                            value={idPsicologo}                          
+                            onChange={(e) => setIdPsicologo(e.target.value === "" ? "" : Number(e.target.value))}
+                            disabled={cargando}
                         >
-                            {PSICOLOGOS.map((p) => (
-                                <option key={p} value={p}>{p}</option>
+                            <option value="">Selecciona un psicólogo...</option>
+                            {psicologos.map((p) => (
+                                <option key={p.id} value={p.id}>
+                                    {p.nombre} {p.apellidoPaterno}
+                                </option>
                             ))}
                         </select>
                     </div>
 
-                    {/* Paciente */}
+                    {/* Paciente (LLENADO DESDE SPRING BOOT) */}
                     <div className="pc-field">
                         <label className="pc-label">Paciente</label>
                         <select
                             className="pc-select"
-                            value={form.paciente}
-                            onChange={(e) => setForm({ ...form, paciente: e.target.value })}
+                            value={idPaciente}
+                            onChange={(e) => setIdPaciente(e.target.value === "" ? "" : Number(e.target.value))}
+                            disabled={cargando}
                         >
-                            {PACIENTES.map((p) => (
-                                <option key={p} value={p}>{p}</option>
+                            <option value="">Selecciona un paciente...</option>
+                            {pacientes.map((p) => (
+                                <option key={p.id} value={p.id}>
+                                    {p.nombre} {p.apellidoPaterno}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -186,19 +211,26 @@ export default function ProgramarCita({ onClose, onSubmit }: ProgramarCitaProps)
                     {/* Total */}
                     <div className="pc-total-row">
                         <span className="pc-total-label">Total de Renta:</span>
-                        <span className="pc-total-amount">$100</span>
+                        <span className="pc-total-amount">$100.00</span>
                     </div>
 
                     {/* Submit */}
-                    <button className="pc-btn-primary" onClick={handleAgendar}>
-                        Agendar cita
+                    <button
+                        className="pc-btn-primary"
+                        onClick={agendar}
+                        disabled={cargando}
+                    >
+                        {cargando ? 'Agendando...' : 'Agendar cita'}
                     </button>
                 </motion.div>
             </div>
 
             <AnimatePresence>
-                {showConfirm && (
-                    <ConfirmPopup onAccept={() => { setShowConfirm(false); onClose(); }} />
+                {mostrarConfirmacion && (
+                    <ConfirmPopup onAccept={() => {
+                        setMostrarConfirmacion(false);
+                        onClose();
+                    }} />
                 )}
             </AnimatePresence>
         </>

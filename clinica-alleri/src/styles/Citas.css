@@ -28,8 +28,56 @@
     font-weight: 600;
 }
 
+.fecha-navegacion{
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.btn-hoy{
+ background: var(--button-violet);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    width: 100px; 
+    height: 36px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-hoy:hover {
+    background: var(--button-violet-hover);
+    transform: scale(1.1);
+}
+
+
 .btn-programar-cita:hover{
     background-color: var(--button-violet-hover);
+}
+
+.btn-nav {
+    background: var(--button-violet);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px; 
+    height: 36px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-nav:hover {
+    background: var(--button-violet-hover);
+    transform: scale(1.1);
+}
+
+.btn-nav i {
+    line-height: 0; /* Evita que el icono se desplace hacia abajo */
 }
 
 .citas-programadas {
@@ -208,14 +256,15 @@
     width: 34px;
     height: 34px;
     border-radius: var(--alleri-radius-full);
-    border: 1.5px solid var(--alleri-primary-mid);
-    background: var(--alleri-primary-light);
+    border: 1.5px solid var(--alleri-primary);
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     color: var(--alleri-primary);
 }
+
 
 .popup__header {
     margin-bottom: 24px;
