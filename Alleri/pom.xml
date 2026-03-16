@@ -15,6 +15,7 @@
         <module>Datos</module>
         <module>Negocio</module>
         <module>DTO</module>
+        <module>Comunicacion</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
