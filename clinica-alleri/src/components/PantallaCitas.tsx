@@ -152,21 +152,10 @@ export function CitaCard({ apt, onEdit }: AppointmentCardProps) {
                 </div>
                 <hr className="apt-card__divider" />
                 
-                <div className="apt-card__footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                        <p className="apt-card__time">{apt.horaInicio} – {apt.horaFin}</p>
-                        <StatusBadge status={apt.status} />
-                    </div>
-                    {/* Botón rápido de editar en la tarjeta */}
-                    <button 
-                        onClick={(e) => { e.stopPropagation(); onEdit(apt.rawDto); }}
-                        style={{
-                            background: 'transparent', border: '1px solid #ccc', padding: '5px 10px',
-                            borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', color: '#666'
-                        }}
-                    >
-                        <i className="pi pi-pencil"></i>
-                    </button>
+                {/* Footer limpio, sin el botón del lápiz ni estilos en línea */}
+                <div className="apt-card__footer">
+                    <p className="apt-card__time">{apt.horaInicio} – {apt.horaFin}</p>
+                    <StatusBadge status={apt.status} />
                 </div>
             </motion.div>
             

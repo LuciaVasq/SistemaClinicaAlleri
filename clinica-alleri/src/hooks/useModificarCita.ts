@@ -1,4 +1,3 @@
-// NUEVO ARCHIVO: src/hooks/useModificarCita.ts
 import { useState, useEffect } from 'react'
 import { catalogoService } from '../services/catalogoService'
 import { citaService } from '../services/citaService'
@@ -7,22 +6,23 @@ import type { PacienteDTO, PsicologoDTO, CubiculoDTO, CitaDTO } from '../types/a
 const idRecepcionistaLogueado = 1; 
 const nombreUsuarioLogueado = "recep1";
 
-// Recibimos la cita actual y su ID como parámetros
 export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: () => void) => {
     const [pacientes, setPacientes] = useState<PacienteDTO[]>([])
     const [psicologos, setPsicologos] = useState<PsicologoDTO[]>([])
     const [cubiculos, setCubiculos] = useState<CubiculoDTO[]>([])
 
-    // Precargamos los datos dividiendo la fecha y la hora que viene del backend
-    const [fecha, setFecha] = useState<string>(citaActual.fechaHoraInicio.split('T')[0] || '')
-    const [horaInicio, setHoraInicio] = useState<string>(citaActual.fechaHoraInicio.split('T')[1]?.substring(0, 5) || '9:00')
-    const [horaFin, setHoraFin] = useState<string>(citaActual.fechaHoraFin.split('T')[1]?.substring(0, 5) || '10:00')
-    const [idCubiculo, setIdCubiculo] = useState<number | ''>(citaActual.cubiculo.id || '')
-    const [idPsicologo, setIdPsicologo] = useState<number | ''>(citaActual.psicologo.id || '')
-    const [idPaciente, setIdPaciente] = useState<number | ''>(citaActual.paciente.id || '')
+    const [fecha, setFecha] = useState<string>(citaActual.fechaHoraInicio?.split('T')[0] || '')
+    const [horaInicio, setHoraInicio] = useState<string>(citaActual.fechaHoraInicio?.split('T')[1]?.substring(0, 5) || '')
+    const [horaFin, setHoraFin] = useState<string>(citaActual.fechaHoraFin?.split('T')[1]?.substring(0, 5) || '')
+    const [idCubiculo, setIdCubiculo] = useState<number | ''>(citaActual.cubiculo?.id || '')
+    const [idPsicologo, setIdPsicologo] = useState<number | ''>(citaActual.psicologo?.id || '')
+    const [idPaciente, setIdPaciente] = useState<number | ''>(citaActual.paciente?.id || '')
 
     const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false)
     const [cargando, setCargando] = useState(false)
+    
+    // NUEVO: Estado para manejar los errores visuales
+    const [errores, setErrores] = useState<Record<string, string>>({})
 
     useEffect(() => {
         const cargarCatalogos = async () => {
@@ -42,10 +42,31 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
         cargarCatalogos()
     }, [])
 
+    // NUEVO: Función validadora
+    const validarFormulario = () => {
+        const nuevosErrores: Record<string, string> = {}
+
+        if (!fecha) nuevosErrores.fecha = "Selecciona una fecha"
+        if (!horaInicio) nuevosErrores.horaInicio = "Falta la hora"
+        if (!horaFin) nuevosErrores.horaFin = "Falta la hora"
+        if (!idCubiculo) nuevosErrores.idCubiculo = "Selecciona un cubículo"
+        if (!idPsicologo) nuevosErrores.idPsicologo = "Selecciona un psicólogo"
+        if (!idPaciente) nuevosErrores.idPaciente = "Selecciona un paciente"
+
+        // Validación extra: La hora de fin debe ser después de la hora de inicio
+        if (horaInicio && horaFin && horaInicio >= horaFin) {
+            nuevosErrores.horaFin = "La hora fin debe ser mayor"
+        }
+
+        setErrores(nuevosErrores)
+        // Retorna true si no hay errores (el objeto está vacío)
+        return Object.keys(nuevosErrores).length === 0
+    }
+
     const guardarCambios = async () => {
-        if (!fecha || !idCubiculo || !idPsicologo || !idPaciente) {
-            alert('Favor de llenar todos los campos.')
-            return
+        // Ejecutamos la validación ANTES de hacer nada
+        if (!validarFormulario()) {
+            return; // Detenemos el guardado si hay errores
         }
 
         setCargando(true)
@@ -53,7 +74,7 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
         const citaModificadaDTO: CitaDTO = {
             fechaHoraInicio: `${fecha}T${horaInicio}:00`,
             fechaHoraFin: `${fecha}T${horaFin}:00`,
-            precio: citaActual.precio, 
+            precio: citaActual.precio || 100.00, 
             cubiculo: { id: Number(idCubiculo), nombre: '' },
             psicologo: { id: Number(idPsicologo) },
             paciente: { id: Number(idPaciente), psicologo: { id: Number(idPsicologo) } },
@@ -64,7 +85,8 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
             await citaService.modificarCita(idCita, citaModificadaDTO)
             setMostrarConfirmacion(true)
         } catch (error) {
-            alert('Error al actualizar la cita');
+            console.error(error);
+            alert('Error al conectar con el servidor. Revisa la consola.');
         } finally {
             setCargando(false)
         }
@@ -75,6 +97,8 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
         fecha, setFecha, horaInicio, setHoraInicio, horaFin, setHoraFin,
         idCubiculo, setIdCubiculo, idPsicologo, setIdPsicologo, idPaciente, setIdPaciente,
         mostrarConfirmacion, setMostrarConfirmacion, cargando,
-        guardarCambios
+        guardarCambios,
+        errores 
+        
     }
 }

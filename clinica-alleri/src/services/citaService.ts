@@ -22,8 +22,7 @@ export const citaService = {
         return res.json()
     },
     modificarCita: async (idCita: number, citaModificada: CitaDTO) => {
-        // Asegúrate de cambiar la URL por la ruta real de tu backend
-        const response = await fetch(`${API_BASE_URL}/citas//actualizar/{id}?id=${idCita}`, {
+           const response = await fetch(`${API_BASE_URL}/citas/actualizar/${idCita}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
