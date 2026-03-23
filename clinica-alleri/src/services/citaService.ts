@@ -20,5 +20,22 @@ export const citaService = {
         const res = await fetch(`${API_BASE_URL}/citas/obtener?dia=${dia}`)
         if (!res.ok) throw new Error('Error al obtener las citas')
         return res.json()
+    },
+    modificarCita: async (idCita: number, citaModificada: CitaDTO) => {
+        // Asegúrate de cambiar la URL por la ruta real de tu backend
+        const response = await fetch(`${API_BASE_URL}/citas//actualizar/{id}?id=${idCita}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(citaModificada),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al modificar la cita');
+        }
+        
+        return await response.json(); 
     }
+
 }
