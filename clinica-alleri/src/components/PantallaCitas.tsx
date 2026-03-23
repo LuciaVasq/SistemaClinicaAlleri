@@ -2,16 +2,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import "../styles/Citas.css"
 import ProgramarCita from "./ProgramarCita";
-
+import ModificarCita from "./ModificarCita";
 
 import { citaService } from '../services/citaService';
 import type { CitaDTO } from '../types/alleri.types';
-
 
 // estado de la cita
 export type AppointmentStatus = "Pagado" | "Cancelado" | "Pendiente"
 
 export interface Appointment {
+    id?: number;
+    rawDto: CitaDTO; // esto es para no perder el id y poder modificar la cita jej
     cubiculo: string
     fecha: string
     psicologo: string
@@ -70,11 +71,12 @@ function StatusBadge({ status }: { status: AppointmentStatus }) {
 }
 
 interface DetailPopupProps {
-    apt: Appointment
-    onClose: () => void
+    apt: Appointment;
+    onClose: () => void;
+    onEdit: () => void; // Recibimos la función de editar
 }
 
-function DetailPopup({ apt, onClose }: DetailPopupProps) {
+function DetailPopup({ apt, onClose, onEdit }: DetailPopupProps) {
     return (
         <motion.div className="popup-overlay" key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} onClick={onClose}>
             <motion.div className="popup" key="popup" initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 24 }} transition={{ type: "spring", stiffness: 340, damping: 30 }} onClick={(e) => e.stopPropagation()}>
@@ -113,16 +115,27 @@ function DetailPopup({ apt, onClose }: DetailPopupProps) {
                 )}
                 <div className="popup__actions">
                     <motion.button className="popup__btn popup__btn--cancel" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={onClose}>Cancelar cita</motion.button>
-                    <motion.button className="popup__btn popup__btn--edit" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>Editar</motion.button>
+                    {/* Botón Editar conectado */}
+                    <motion.button 
+                        className="popup__btn popup__btn--edit" 
+                        whileHover={{ scale: 1.03 }} 
+                        whileTap={{ scale: 0.97 }} 
+                        onClick={() => { onClose(); onEdit(); }}
+                    >
+                        Editar
+                    </motion.button>
                 </div>
             </motion.div>
         </motion.div>
     )
 }
 
-interface AppointmentCardProps { apt: Appointment; }
+interface AppointmentCardProps { 
+    apt: Appointment; 
+    onEdit: (cita: CitaDTO) => void; 
+}
 
-export function CitaCard({ apt }: AppointmentCardProps) {
+export function CitaCard({ apt, onEdit }: AppointmentCardProps) {
     const [open, setOpen] = useState<boolean>(false)
     const isCancelled = apt.status === "Cancelado"
 
@@ -138,18 +151,38 @@ export function CitaCard({ apt }: AppointmentCardProps) {
                     <div className="apt-card__info-row"><span className="apt-card__label">Paciente</span><p className="apt-card__value">{apt.paciente}</p></div>
                 </div>
                 <hr className="apt-card__divider" />
+                
+                {/* Footer limpio, sin el botón del lápiz ni estilos en línea */}
                 <div className="apt-card__footer">
                     <p className="apt-card__time">{apt.horaInicio} – {apt.horaFin}</p>
                     <StatusBadge status={apt.status} />
                 </div>
             </motion.div>
-            <AnimatePresence>{open && <DetailPopup apt={apt} onClose={() => setOpen(false)} />}</AnimatePresence>
+            
+            <AnimatePresence>
+                {open && <DetailPopup apt={apt} onClose={() => setOpen(false)} onEdit={() => onEdit(apt.rawDto)} />}
+            </AnimatePresence>
         </>
     )
 }
 
 export default function PantallaCitas() {
     const [showProgramar, setShowProgramar] = useState(false)
+    const [showModificar, setShowModificar] = useState(false);
+    const [citaAEditar, setCitaAEditar] = useState<CitaDTO | null>(null);
+
+    // Función para abrir el modal con la cita seleccionada
+    const handleAbrirModificar = (cita: CitaDTO) => {
+        setCitaAEditar(cita);
+        setShowModificar(true);
+    };
+
+    // Función para cerrar el modal y recargar
+    const handleCloseModificar = () => {
+        setShowModificar(false);
+        setCitaAEditar(null);
+        cargarCitas(fechaVisualizada); // Recarga para ver los cambios
+    };
 
     // Estado para guardar las citas reales del backend
     const [citasBack, setCitasBack] = useState<Appointment[]>([])
@@ -170,7 +203,6 @@ export default function PantallaCitas() {
     const cargarCitas = async (fecha: Date) => {
         setCargando(true)
         try {
-
             const year = fecha.getFullYear()
             const month = String(fecha.getMonth() + 1).padStart(2, '0')
             const day = String(fecha.getDate()).padStart(2, '0')
@@ -185,6 +217,8 @@ export default function PantallaCitas() {
                 const horaFin = cita.fechaHoraFin ? cita.fechaHoraFin.split('T')[1].substring(0, 5) : "--:--"
 
                 return {
+                    id: cita.id,
+                    rawDto: cita, 
                     cubiculo: cita.cubiculo?.nombre || `Cubículo ${cita.cubiculo?.id || '?'}`,
                     fecha: cita.fechaHoraInicio ? cita.fechaHoraInicio.split('T')[0] : "Sin fecha",
                     psicologo: `${cita.psicologo?.nombre || ''} ${cita.psicologo?.apellidoPaterno || ''}`,
@@ -209,7 +243,6 @@ export default function PantallaCitas() {
         cargarCitas(fechaVisualizada)
     }, [fechaVisualizada])
 
-
     const navegarDia = (offset: number) => {
         const nuevaFecha = new Date(fechaVisualizada);
         nuevaFecha.setDate(fechaVisualizada.getDate() + offset);
@@ -217,8 +250,6 @@ export default function PantallaCitas() {
     }
     const irAHoy = () => setFechaVisualizada(new Date());
 
-    // Cuando se cierra el modal de "Programar Cita", recargamos las citas 
-    // por si el usuario guardó una nueva.
     const handleCloseProgramar = () => {
         setShowProgramar(false)
         cargarCitas(fechaVisualizada);
@@ -260,6 +291,16 @@ export default function PantallaCitas() {
                         <ProgramarCita onClose={handleCloseProgramar} fechaInicial={fechaVisualizadaStr}/>
                     )}
                 </AnimatePresence>
+                
+                <AnimatePresence>
+                {showModificar && citaAEditar && (
+                    <ModificarCita 
+                        citaActual={citaAEditar} 
+                        idCita={citaAEditar.id || 0} 
+                        onClose={handleCloseModificar} 
+                    />
+                )}
+            </AnimatePresence>
             </div>
 
             <div className="citas-programadas">
@@ -269,7 +310,7 @@ export default function PantallaCitas() {
                     <p>No hay citas programadas para el día seleccionado.</p>
                 ) : (
                     citasBack.map((cita, i) => (
-                        <CitaCard key={i} apt={cita} />
+                        <CitaCard key={i} apt={cita} onEdit={handleAbrirModificar} />
                     ))
                 )}
             </div>

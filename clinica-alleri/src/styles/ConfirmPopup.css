@@ -1,0 +1,63 @@
+.pc-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--alleri-popup-overlay, rgba(0, 0, 0, 0.4));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2100; /* Asegura que esté por encima del formulario de programar cita */
+  backdrop-filter: blur(4px); 
+}
+
+.pc-confirm-card {
+  background: var(--alleri-magenta-popup); 
+  border-radius: 24px; /* var(--alleri-radius-xl) */
+  padding: 45px 35px 35px;
+  max-width: 440px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15); /* var(--alleri-popup-shadow) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px; 
+}
+
+.pc-confirm-title {
+  color: var(--alleri-white);
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.pc-confirm-body {
+  color: var(--alleri-white);
+  font-size: 1.1rem;
+  font-weight: 500; 
+  margin: 0;
+  line-height: 1.4;
+}
+
+.pc-btn-accept {
+  background: var(--button-violet); 
+  color: var(--alleri-white);
+  border: none;
+  border-radius: 30px; 
+  padding: 14px 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+  width: auto;
+}
+
+.pc-btn-accept:hover {
+  background: var(--button-violet-hover); 
+  transform: scale(1.02);
+}
+
+.pc-btn-accept:active {
+  transform: scale(0.95);
+}

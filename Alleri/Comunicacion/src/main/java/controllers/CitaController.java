@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * Controlador Rest que recibe peticiones HTTP para realizar operaciones
@@ -44,6 +46,16 @@ public class CitaController {
     @GetMapping("/obtener")
     public ResponseEntity<List<CitaDTO>> obtenerCitas(@RequestParam("dia") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dia){
         return ResponseEntity.ok(citaBO.obtenerCitas(dia));
+    }
+    
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<CitaDTO> actualizarCita(@PathVariable int id, @RequestBody CitaDTO citaModificada) {
+
+        citaModificada.setId(id); 
+
+        CitaDTO citaEditada = citaBO.editarCita(citaModificada);
+
+        return ResponseEntity.ok(citaEditada);
     }
 
 }
