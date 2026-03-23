@@ -4,7 +4,7 @@ import "../styles/Citas.css"
 import ProgramarCita from "./ProgramarCita";
 import ModificarCita from "./ModificarCita";
 
-import { citaService } from '../services/citaService';
+import { citaService } from '../services/citaService.ts';
 import type { CitaDTO } from '../types/alleri.types';
 
 // estado de la cita
@@ -116,10 +116,10 @@ function DetailPopup({ apt, onClose, onEdit }: DetailPopupProps) {
                 <div className="popup__actions">
                     <motion.button className="popup__btn popup__btn--cancel" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={onClose}>Cancelar cita</motion.button>
                     {/* Botón Editar conectado */}
-                    <motion.button 
-                        className="popup__btn popup__btn--edit" 
-                        whileHover={{ scale: 1.03 }} 
-                        whileTap={{ scale: 0.97 }} 
+                    <motion.button
+                        className="popup__btn popup__btn--edit"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
                         onClick={() => { onClose(); onEdit(); }}
                     >
                         Editar
@@ -130,9 +130,9 @@ function DetailPopup({ apt, onClose, onEdit }: DetailPopupProps) {
     )
 }
 
-interface AppointmentCardProps { 
-    apt: Appointment; 
-    onEdit: (cita: CitaDTO) => void; 
+interface AppointmentCardProps {
+    apt: Appointment;
+    onEdit: (cita: CitaDTO) => void;
 }
 
 export function CitaCard({ apt, onEdit }: AppointmentCardProps) {
@@ -151,14 +151,14 @@ export function CitaCard({ apt, onEdit }: AppointmentCardProps) {
                     <div className="apt-card__info-row"><span className="apt-card__label">Paciente</span><p className="apt-card__value">{apt.paciente}</p></div>
                 </div>
                 <hr className="apt-card__divider" />
-                
+
                 {/* Footer limpio, sin el botón del lápiz ni estilos en línea */}
                 <div className="apt-card__footer">
                     <p className="apt-card__time">{apt.horaInicio} – {apt.horaFin}</p>
                     <StatusBadge status={apt.status} />
                 </div>
             </motion.div>
-            
+
             <AnimatePresence>
                 {open && <DetailPopup apt={apt} onClose={() => setOpen(false)} onEdit={() => onEdit(apt.rawDto)} />}
             </AnimatePresence>
@@ -218,7 +218,7 @@ export default function PantallaCitas() {
 
                 return {
                     id: cita.id,
-                    rawDto: cita, 
+                    rawDto: cita,
                     cubiculo: cita.cubiculo?.nombre || `Cubículo ${cita.cubiculo?.id || '?'}`,
                     fecha: cita.fechaHoraInicio ? cita.fechaHoraInicio.split('T')[0] : "Sin fecha",
                     psicologo: `${cita.psicologo?.nombre || ''} ${cita.psicologo?.apellidoPaterno || ''}`,
@@ -255,6 +255,8 @@ export default function PantallaCitas() {
         cargarCitas(fechaVisualizada);
     }
 
+    const fechaActual = fechaVisualizada.setHours(0,0,0,0) >= new Date().setHours(0,0,0,0)
+
     return (
         <>
             <div className="citas-programadas-header">
@@ -278,29 +280,33 @@ export default function PantallaCitas() {
                     </div>
                 </article>
 
-                <motion.button
-                    onClick={() => setShowProgramar(true)}
-                    className="btn-programar-cita"
-                    whileHover={{ scale: 1.01 }}
-                >
-                    <p> Programar cita </p>
-                </motion.button>
+
+
+                { fechaActual && (
+                    <motion.button
+                        onClick={() => setShowProgramar(true)}
+                        className="btn-programar-cita"
+                        whileHover={{ scale: 1.01 }}
+                    >
+                        <p> Programar cita </p>
+                    </motion.button>
+                )}
 
                 <AnimatePresence>
                     {showProgramar && (
-                        <ProgramarCita onClose={handleCloseProgramar} fechaInicial={fechaVisualizadaStr}/>
+                        <ProgramarCita onClose={handleCloseProgramar} fechaInicial={fechaVisualizadaStr} />
                     )}
                 </AnimatePresence>
-                
+
                 <AnimatePresence>
-                {showModificar && citaAEditar && (
-                    <ModificarCita 
-                        citaActual={citaAEditar} 
-                        idCita={citaAEditar.id || 0} 
-                        onClose={handleCloseModificar} 
-                    />
-                )}
-            </AnimatePresence>
+                    {showModificar && citaAEditar && fechaActual &&(
+                        <ModificarCita
+                            citaActual={citaAEditar}
+                            idCita={citaAEditar.id || 0}
+                            onClose={handleCloseModificar}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
 
             <div className="citas-programadas">

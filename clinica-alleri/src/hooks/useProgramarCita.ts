@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { catalogoService } from '../services/catalogoService'
-import { citaService } from '../services/citaService'
+import { citaService } from '../services/citaService.ts'
 import type { PacienteDTO, PsicologoDTO, CubiculoDTO, CitaDTO } from '../types/alleri.types';
 
 // MOCK: LUEGO ACTUALIZAR CON USUARIO E ID LOGGEADOS EN EL SISTEMA 

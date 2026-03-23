@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @author victoria
  */
 @SpringBootApplication(scanBasePackages = {"controllers", "org.itson", "implementaciones", "IMappers"})
-@EnableJpaRepositories(basePackages = "org.itson.datos.implementaciones") // <-- AGREGA ESTO
+@EnableJpaRepositories(basePackages = "org.itson.datos.implementaciones")
 @EntityScan(basePackages = "org.itson.dominio.entidades")
 public class Comunicacion implements  CommandLineRunner{
 

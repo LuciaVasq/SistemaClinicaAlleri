@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
-import "../styles/ProgramarCita.css"; 
+import "../styles/ProgramarCita.css";
 import "primereact/resources/primereact.min.css";
 import { useModificarCita } from "../hooks/useModificarCita";
 import type { CitaDTO } from '../types/alleri.types';
-import ConfirmPopup from "./ConfirmPopup"; 
+import ConfirmPopup from "./ConfirmPopup";
+import { Calendar } from "primereact/calendar";
 
 interface Props {
     citaActual: CitaDTO;
@@ -31,16 +32,17 @@ function addHour(time: string): string {
     return `${String(next).padStart(2, "0")}:${String(m).padStart(2, "0")}`
 }
 
+
 export default function ModificarCita({ citaActual, idCita, onClose }: Props) {
     const {
         pacientes, psicologos, cubiculos,
-        fecha, setFecha, 
-        horaInicio, setHoraInicio, 
+        fecha, setFecha,
+        horaInicio, setHoraInicio,
         horaFin, setHoraFin,
-        idCubiculo, setIdCubiculo, 
-        idPsicologo, setIdPsicologo, 
+        idCubiculo, setIdCubiculo,
+        idPsicologo, setIdPsicologo,
         idPaciente, setIdPaciente,
-        mostrarConfirmacion, setMostrarConfirmacion, 
+        mostrarConfirmacion, setMostrarConfirmacion,
         cargando, guardarCambios,
         errores
     } = useModificarCita(citaActual, idCita, onClose);
@@ -50,6 +52,22 @@ export default function ModificarCita({ citaActual, idCita, onClose }: Props) {
         const nuevaHoraInicio = e.target.value;
         setHoraInicio(nuevaHoraInicio);
         setHoraFin(addHour(nuevaHoraInicio));
+    };
+
+const fechaDate = fecha ? new Date(fecha + 'T00:00:00') : null;
+
+const handleFechaChange = (e: any) => {
+        if (e.value) {
+            // Extraemos año, mes y día del objeto Date de PrimeReact
+            const year = e.value.getFullYear();
+            const month = String(e.value.getMonth() + 1).padStart(2, '0');
+            const day = String(e.value.getDate()).padStart(2, '0');
+            
+            // Lo guardamos como string "YYYY-MM-DD" para tu hook
+            setFecha(`${year}-${month}-${day}`);
+        } else {
+            setFecha(''); // Por si borran la fecha
+        }
     };
 
     return (
@@ -70,18 +88,21 @@ export default function ModificarCita({ citaActual, idCita, onClose }: Props) {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        
+
                         {/* Fecha */}
                         <div className="pc-field">
                             <label className="pc-label">Fecha</label>
                             <div style={{ width: '100%' }}>
-                                <input 
-                                    type="date"
-                                    className={`pc-select ${errores.fecha ? 'pc-input-error' : ''}`}
-                                    value={fecha} 
-                                    onChange={(e) => setFecha(e.target.value)}
+                                <Calendar
+                                    value={fechaDate}
+                                    onChange={handleFechaChange}
+                                    dateFormat="dd 'de' MM 'de' yy"
+                                    locale="es"
+                                    showIcon
+                                    className={`pc-calendar-custom ${errores.fecha ? 'p-invalid' : ''}`}
+                                    readOnlyInput
                                     disabled={cargando}
-                                    style={{ width: '100%', boxSizing: 'border-box' }}
+                                    style={{ width: '100%' }} 
                                 />
                                 {errores.fecha && <span className="pc-error-text">{errores.fecha}</span>}
                             </div>
