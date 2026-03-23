@@ -15,9 +15,10 @@ export const citaService = {
         return res.json()
     },
 
-    obtenerCitasPorDia: async(dia: string): Promise<CitaDTO[]> => {
+    obtenerCitasPorDia: async (dia: string): Promise<CitaDTO[]> => {
         // manda el dia por la url
-        const res = await fetch(`${API_BASE_URL}/citas/obtener?dia=${dia}`)
+        const fechaConHora = dia.includes('T') ? dia : `${dia}T00:00:00`
+        const res = await fetch(`${API_BASE_URL}/citas/obtener?dia=${fechaConHora}`)
         if (!res.ok) throw new Error('Error al obtener las citas')
         return res.json()
     }

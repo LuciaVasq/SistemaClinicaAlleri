@@ -26,6 +26,7 @@ addLocale('es', {
 
 interface ProgramarCitaProps {
     onClose: () => void
+    fechaInicial?: string
 }
 
 const HORAS = [
@@ -65,7 +66,7 @@ function ConfirmPopup({ onAccept }: { onAccept: () => void }) {
     );
 }
 
-export default function ProgramarCita({ onClose }: ProgramarCitaProps) {
+export default function ProgramarCita({ onClose, fechaInicial }: ProgramarCitaProps) {
 
     const {
         pacientes, psicologos, cubiculos,
@@ -77,8 +78,9 @@ export default function ProgramarCita({ onClose }: ProgramarCitaProps) {
         idPaciente, setIdPaciente,
         mostrarConfirmacion, setMostrarConfirmacion,
         cargando,
-        agendar
-    } = useProgramarCita(onClose)
+        agendar,
+        horariosDisponibles
+    } = useProgramarCita(onClose, fechaInicial)
 
 
     const handleFechaChange = (e: any) => {
@@ -137,25 +139,6 @@ export default function ProgramarCita({ onClose }: ProgramarCitaProps) {
                         />
                     </div>
 
-                    {/* Hora inicio / fin */}
-                    <div className="pc-field">
-                        <label className="pc-label">Hora de inicio</label>
-                        <div className="pc-time-row">
-                            <select
-                                className="pc-time-select"
-                                value={horaInicio}
-                                onChange={handleHoraInicioChange}
-                                disabled={cargando}
-                            >
-                                {HORAS.map((h) => (
-                                    <option key={h} value={h}>{h}</option>
-                                ))}
-                            </select>
-                            <span className="pc-label">Hora fin</span>
-                            <span className="pc-time-end">{horaFin}</span>
-                        </div>
-                    </div>
-
                     {/* Cubículo (LLENADO DESDE SPRING BOOT) */}
                     <div className="pc-field">
                         <label className="pc-label">Cubículo</label>
@@ -171,6 +154,27 @@ export default function ProgramarCita({ onClose }: ProgramarCitaProps) {
                             ))}
                         </select>
                     </div>
+
+                    {/* Hora inicio / fin */}
+                    <div className="pc-field">
+                        <label className="pc-label">Hora de inicio</label>
+                        <div className="pc-time-row">
+                            <select
+                                className="pc-time-select"
+                                value={horaInicio}
+                                onChange={handleHoraInicioChange}
+                                disabled={cargando}
+                            >
+                                {horariosDisponibles.map((h) => (
+                                    <option key={h} value={h}>{h}</option>
+                                ))}
+                            </select>
+                            <span className="pc-label">Hora fin</span>
+                            <span className="pc-time-end">{horaFin}</span>
+                        </div>
+                    </div>
+
+                    
 
                     {/* Psicólogo (LLENADO DESDE SPRING BOOT) */}
                     <div className="pc-field">

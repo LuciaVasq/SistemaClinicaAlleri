@@ -156,6 +156,10 @@ export default function PantallaCitas() {
     const [cargando, setCargando] = useState(false)
 
     const [fechaVisualizada, setFechaVisualizada] = useState(new Date())
+
+    // fecha
+    const fechaVisualizadaStr = `${fechaVisualizada.getFullYear()}-${String(fechaVisualizada.getMonth() + 1).padStart(2, '0')}-${String(fechaVisualizada.getDate()).padStart(2, '0')}`
+
     const formatearFechaHeader = (date: Date) => {
         return new Intl.DateTimeFormat('es-MX', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
@@ -253,7 +257,7 @@ export default function PantallaCitas() {
 
                 <AnimatePresence>
                     {showProgramar && (
-                        <ProgramarCita onClose={handleCloseProgramar} />
+                        <ProgramarCita onClose={handleCloseProgramar} fechaInicial={fechaVisualizadaStr}/>
                     )}
                 </AnimatePresence>
             </div>
