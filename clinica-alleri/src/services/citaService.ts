@@ -36,6 +36,17 @@ export const citaService = {
         }
         
         return await response.json(); 
+    },
+    eliminarCita: async (idCita: number) => {
+        const res = await fetch(`${API_BASE_URL}/citas/eliminar/${idCita}`, {
+            method: 'DELETE',
+        })
+
+        if (!res.ok) {
+            throw new Error('Error al eliminar la cita')
+        }
+
+        return res.json();
     }
 
 }

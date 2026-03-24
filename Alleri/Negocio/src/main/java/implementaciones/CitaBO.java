@@ -7,13 +7,16 @@ package implementaciones;
 import IMappers.AdeudoMapper;
 import IMappers.CitaMapper;
 import interfaces.ICitaBO;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.itson.datos.interfaces.IAdeudoDAO;
 import org.itson.datos.interfaces.ICitaDAO;
 import org.itson.datos.interfaces.ICubiculoDAO;
 import org.itson.dominio.entidades.Adeudo;
 import org.itson.dominio.entidades.Cita;
+import org.itson.dominio.entidades.Psicologo;
 import org.itson.dto.AdeudoDTO;
 import org.itson.dto.CitaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +35,10 @@ public class CitaBO implements ICitaBO {
     private IAdeudoDAO adeudoDAO;
     @Autowired
     private ICubiculoDAO cubiculoDAO;
-    
+
     @Autowired
     private CitaMapper citaMapper;
-    
+
     @Autowired
     private AdeudoMapper adeudoMapper;
 
@@ -45,13 +48,13 @@ public class CitaBO implements ICitaBO {
             throw new RuntimeException("No se puede agendar una cita en el pasado.");
         }
 
-        if (nuevaCita.getPsicologo() == null || nuevaCita.getCubiculo() == null ||  nuevaCita.getPaciente() == null) {
+        if (nuevaCita.getPsicologo() == null || nuevaCita.getCubiculo() == null || nuevaCita.getPaciente() == null) {
             throw new RuntimeException("La cita no puede ser agendada debido a información faltante.");
         }
 
         Cita citanueva = citaMapper.toCita(nuevaCita);
         Cita guardada = citaDAO.agendarCita(citanueva);
-        
+
         return citaMapper.toCTOCita(guardada);
     }
 
@@ -60,18 +63,18 @@ public class CitaBO implements ICitaBO {
         if (citaEditada == null) {
             throw new RuntimeException("La cita debe existir para ser editada.");
         }
-        
+
         if (citaEditada.getFechaHoraInicio().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("No se puede agendar una cita en el pasado.");
         }
-        
-        if (citaEditada.getPsicologo() == null || citaEditada.getCubiculo() == null ||  citaEditada.getPaciente() == null) {
+
+        if (citaEditada.getPsicologo() == null || citaEditada.getCubiculo() == null || citaEditada.getPaciente() == null) {
             throw new RuntimeException("La cita no puede ser editada debido a información faltante.");
         }
-        
+
         Cita citanueva = citaMapper.toCita(citaEditada);
         Cita editada = citaDAO.editarCita(citanueva);
-        
+
         return citaMapper.toCTOCita(editada);
     }
 
@@ -81,9 +84,26 @@ public class CitaBO implements ICitaBO {
             throw new RuntimeException("La cita debe existir para ser eliminada.");
         }
         
-       Cita citanueva = citaMapper.toCita(cita);
-        Cita eliminada = citaDAO.eliminarCita(citanueva);
-        
+        Optional<Cita> optional = citaDAO.findById(Long.valueOf(cita.getId()));
+        if (!optional.isPresent()) {
+            throw new RuntimeException("Cita no encontrada");
+        }
+        Cita existente = optional.get();
+        Psicologo psicologo = existente.getPsicologo();
+        Adeudo adeudo = psicologo.getAdeudo();
+        if (adeudo != null && adeudo.getTotal() != null) {
+            BigDecimal nuevoTotal = adeudo.getTotal().subtract(existente.getPrecio());
+
+            if (nuevoTotal.compareTo(BigDecimal.ZERO) < 0) {
+                nuevoTotal = BigDecimal.ZERO;
+            }
+
+            adeudo.setTotal(nuevoTotal);
+            adeudoDAO.registrarAdeudo(adeudo);
+        }
+
+        Cita eliminada = citaDAO.eliminarCita(existente);
+
         return citaMapper.toCTOCita(eliminada);
     }
 
@@ -96,11 +116,11 @@ public class CitaBO implements ICitaBO {
     @Override
     public void actualizarAdeudo(List<CitaDTO> citasdto, Long idPsicologo) {
         List<Cita> citas = citaMapper.toCitaList(citasdto);
-        
-        if (citas.isEmpty() || citas == null) {
+
+        if (citas == null || citas.isEmpty()) {
             throw new RuntimeException("No se obtuvieron citas a las cuales actualizarle el adeudo.");
         }
-        
+
         adeudoDAO.actualizarAdeudo(citas, idPsicologo);
     }
 

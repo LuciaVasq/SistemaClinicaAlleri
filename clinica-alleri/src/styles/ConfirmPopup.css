@@ -61,3 +61,26 @@
 .pc-btn-accept:active {
   transform: scale(0.95);
 }
+
+.pc-btn-cancel {
+  background: transparent;
+  color: var(--alleri-white);
+  border: 2px solid var(--alleri-white);
+  border-radius: 30px;
+  padding: 14px 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 10px;
+  width: auto;
+}
+
+.pc-btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.02);
+}
+
+.pc-btn-cancel:active {
+  transform: scale(0.95);
+}

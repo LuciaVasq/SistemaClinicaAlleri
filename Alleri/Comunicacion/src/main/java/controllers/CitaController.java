@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,18 +45,28 @@ public class CitaController {
      * la fecha actual del sistema.
      */
     @GetMapping("/obtener")
-    public ResponseEntity<List<CitaDTO>> obtenerCitas(@RequestParam("dia") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dia){
+    public ResponseEntity<List<CitaDTO>> obtenerCitas(@RequestParam("dia") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dia) {
         return ResponseEntity.ok(citaBO.obtenerCitas(dia));
     }
-    
+
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<CitaDTO> actualizarCita(@PathVariable int id, @RequestBody CitaDTO citaModificada) {
 
-        citaModificada.setId(id); 
+        citaModificada.setId(id);
 
         CitaDTO citaEditada = citaBO.editarCita(citaModificada);
 
         return ResponseEntity.ok(citaEditada);
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<CitaDTO> eliminar(@PathVariable Long id) {
+        CitaDTO cita = new CitaDTO();
+        cita.setId(id.intValue());
+
+        CitaDTO eliminada = citaBO.eliminarCita(cita);
+
+        return ResponseEntity.ok(eliminada);
     }
 
 }
