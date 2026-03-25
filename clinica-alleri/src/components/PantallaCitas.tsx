@@ -76,11 +76,15 @@ interface DetailPopupProps {
     onClose: () => void;
     onEdit: () => void; // Recibimos la función de editar
     onDelete: (id: number) => void;
+    setErrorPopup: (msg: string) => void;
 }
 
 
-function DetailPopup({ apt, onClose, onEdit, onDelete }: DetailPopupProps) {
+function DetailPopup({ apt, onClose, onEdit, onDelete, setErrorPopup }: DetailPopupProps) {
     const [showConfirm, setShowConfirm] = useState(false);
+    const fechaHoraCita = new Date(`${apt.fecha}T${apt.horaInicio}:00`);
+    const pasada = fechaHoraCita < new Date();
+
     return (
         <motion.div className="popup-overlay" key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} onClick={onClose}>
             <motion.div className="popup" key="popup" initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 24 }} transition={{ type: "spring", stiffness: 340, damping: 30 }} onClick={(e) => e.stopPropagation()}>
@@ -119,7 +123,17 @@ function DetailPopup({ apt, onClose, onEdit, onDelete }: DetailPopupProps) {
                 )}
                 <div className="popup__actions">
                     <motion.button className="popup__btn popup__btn--cancel" whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                        onClick={() => setShowConfirm(true)}>Cancelar cita</motion.button>
+                        onClick={() => {
+                            if (pasada) {
+                                setErrorPopup("No puedes cancelar una cita que ya pasó.");
+                                return;
+                            }
+                            setShowConfirm(true);
+                        }}
+                        
+                    >
+                        Cancelar cita
+                    </motion.button>
                     {/* Botón Editar conectado */}
                     <motion.button
                         className="popup__btn popup__btn--edit"
@@ -151,9 +165,10 @@ interface AppointmentCardProps {
     apt: Appointment;
     onEdit: (cita: CitaDTO) => void;
     onDelete: (id: number) => void;
+    setErrorPopup: (msg: string) => void;
 }
 
-export function CitaCard({ apt, onEdit, onDelete }: AppointmentCardProps) {
+export function CitaCard({ apt, onEdit, onDelete, setErrorPopup }: AppointmentCardProps) {
     const [open, setOpen] = useState<boolean>(false)
     const isCancelled = apt.status === "Cancelado"
 
@@ -178,7 +193,7 @@ export function CitaCard({ apt, onEdit, onDelete }: AppointmentCardProps) {
             </motion.div>
 
             <AnimatePresence>
-                {open && <DetailPopup apt={apt} onClose={() => setOpen(false)} onEdit={() => onEdit(apt.rawDto)} onDelete={onDelete} />}
+                {open && <DetailPopup apt={apt} onClose={() => setOpen(false)} onEdit={() => onEdit(apt.rawDto)} onDelete={onDelete} setErrorPopup={setErrorPopup} />}
             </AnimatePresence>
         </>
     )
@@ -188,6 +203,7 @@ export default function PantallaCitas() {
     const [showProgramar, setShowProgramar] = useState(false)
     const [showModificar, setShowModificar] = useState(false);
     const [citaAEditar, setCitaAEditar] = useState<CitaDTO | null>(null);
+    const [errorPopup, setErrorPopup] = useState<string | null>(null);
 
     // Función para abrir el modal con la cita seleccionada
     const handleAbrirModificar = (cita: CitaDTO) => {
@@ -206,8 +222,13 @@ export default function PantallaCitas() {
         try {
             await citaService.eliminarCita(id);
             setCitasBack(prev => prev.filter(c => c.id !== id));
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error eliminando:", error);
+
+            setErrorPopup(
+                error?.response?.data?.message ||
+                "No se pudo cancelar la cita."
+            );
         }
     };
 
@@ -335,6 +356,23 @@ export default function PantallaCitas() {
                     )}
                 </AnimatePresence>
 
+                <AnimatePresence>
+                    {errorPopup && (
+                        <div className="pc-confirm-overlay" role="dialog" aria-modal>
+                            <div className="pc-confirm-card">
+                                <p className="pc-confirm-title">Aviso</p>
+                                <p className="pc-confirm-body">{errorPopup}</p>
+                                <button
+                                    className="pc-btn-accept"
+                                    onClick={() => setErrorPopup(null)}
+                                >
+                                    Aceptar
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </AnimatePresence>
+
             </div>
 
             <div className="citas-programadas">
@@ -344,7 +382,7 @@ export default function PantallaCitas() {
                     <p>No hay citas programadas para el día seleccionado.</p>
                 ) : (
                     citasBack.map((cita, i) => (
-                        <CitaCard key={i} apt={cita} onEdit={handleAbrirModificar} onDelete={handleCancelar} />
+                        <CitaCard key={i} apt={cita} onEdit={handleAbrirModificar} onDelete={handleCancelar} setErrorPopup={setErrorPopup}/>
                     ))
                 )}
             </div>

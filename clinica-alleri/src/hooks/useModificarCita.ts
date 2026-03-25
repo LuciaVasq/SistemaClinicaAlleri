@@ -34,9 +34,11 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
     const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false)
     const [cargando, setCargando] = useState(false)
 
-    // NUEVO: Estado para manejar los errores visuales
     const [errores, setErrores] = useState<Record<string, string>>({})
     const [errorPopup, setErrorPopup] = useState<string | null>(null)
+
+    const [psicologosDisponibles, setPsicologosDisponibles] = useState<PsicologoDTO[]>([])
+    const [pacientesDisponibles, setPacientesDisponibles] = useState<PacienteDTO[]>([])
 
     useEffect(() => {
         const cargarCatalogos = async () => {
@@ -77,6 +79,13 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
                 const citasDia = await citaService.obtenerCitasPorDia(fechaActual)
                 if (isCancelled()) return
 
+                console.log("citasDia:", citasDia)
+                console.log("cubiculoActual:", cubiculoActual)
+
+                citasDia.forEach(c => {
+                    console.log("cita cubiculo:", c.cubiculo)
+                })
+
                 const citasCubiculo = citasDia.filter(c => c.cubiculo?.id === Number(cubiculoActual))
                 const horasOcupadas = citasCubiculo
                     .map(c => c.fechaHoraInicio.split('T')[1].substring(0, 5))
@@ -107,13 +116,49 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
         }
     }
 
+    //excluye al paciente y psicologo de la cita q se esta modificando
+    const recalcularDisponibles = async (
+        fechaActual: string,
+        horaActual: string,
+        isCancelled: () => boolean = () => false
+    ) => {
+        if (!fechaActual || !horaActual) {
+            setPsicologosDisponibles(psicologos)
+            setPacientesDisponibles(pacientes)
+            return
+        }
+
+        try {
+            const citasDia = await citaService.obtenerCitasPorDia(fechaActual)
+            if (isCancelled()) return
+
+            const citasEsaHora = citasDia.filter(c =>
+                c.fechaHoraInicio.split('T')[1].substring(0, 5) === horaActual
+                && c.id !== idCita  // excluye la cita actual
+            )
+
+            const idsPsicologosOcupados = new Set(citasEsaHora.map(c => c.psicologo?.id))
+            const idsPacientesOcupados = new Set(citasEsaHora.map(c => c.paciente?.id))
+
+            setPsicologosDisponibles(psicologos.filter(p => !idsPsicologosOcupados.has(p.id)))
+            setPacientesDisponibles(pacientes.filter(p => !idsPacientesOcupados.has(p.id)))
+        } catch (error) {
+            console.error("Error al filtrar disponibles: ", error)
+        }
+    }
+
     useEffect(() => {
         let cancelado = false
         recalcularHorarios(fecha, idCubiculo, () => cancelado)
         return () => { cancelado = true }
     }, [fecha, idCubiculo])
 
-    // NUEVO: Función validadora
+    useEffect(() => {
+        let cancelado = false
+        recalcularDisponibles(fecha, horaInicio, () => cancelado)
+        return () => { cancelado = true }
+    }, [fecha, horaInicio, psicologos, pacientes])
+
     const validarFormulario = () => {
         const nuevosErrores: Record<string, string> = {}
 
@@ -164,7 +209,7 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
     }
 
     return {
-        pacientes, psicologos, cubiculos,
+        pacientes: pacientesDisponibles, psicologos: psicologosDisponibles, cubiculos,
         fecha, setFecha, horaInicio, setHoraInicio, horaFin, setHoraFin,
         idCubiculo, setIdCubiculo, idPsicologo, setIdPsicologo, idPaciente, setIdPaciente,
         mostrarConfirmacion, setMostrarConfirmacion, cargando,

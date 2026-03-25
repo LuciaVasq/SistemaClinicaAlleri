@@ -29,6 +29,10 @@ export const useProgramarCita = (onClose: () => void, fechaInicial?: string) => 
     // estado para manejar la disponibilidad de horario de cada cubículo
     const [horariosDisponibles, setHorariosDisponibles] = useState<string[]>(HORARIOS_CUBICULOS)
 
+    //estado para manejar los psicologos y pacientes ocupados
+    const [psicologosDisponibles, setPsicologosDisponibles] = useState<PsicologoDTO[]>([])
+    const [pacientesDisponibles, setPacientesDisponibles] = useState<PacienteDTO[]>([])
+
     // estados para el formulario de registrar cita (campos que el usuario llena o elige)
     const [fecha, setFecha] = useState<string>(fechaInicial ?? getFechaHoy())
     const [horaInicio, setHoraInicio] = useState<string>('9:00')
@@ -117,11 +121,46 @@ export const useProgramarCita = (onClose: () => void, fechaInicial?: string) => 
         }
     }
 
+    const recalcularDisponibles = async (
+        fechaActual: string,
+        horaActual: string,
+        isCancelled: () => boolean = () => false
+    ) => {
+        if (!fechaActual || !horaActual) {
+            setPsicologosDisponibles(psicologos)
+            setPacientesDisponibles(pacientes)
+            return
+        }
+
+        try {
+            const citasDia = await citaService.obtenerCitasPorDia(fechaActual)
+            if (isCancelled()) return
+
+            const citasEsaHora = citasDia.filter(c =>
+                c.fechaHoraInicio.split('T')[1].substring(0, 5) === horaActual
+            )
+
+            const idsPsicologosOcupados = new Set(citasEsaHora.map(c => c.psicologo?.id))
+            const idsPacientesOcupados = new Set(citasEsaHora.map(c => c.paciente?.id))
+
+            setPsicologosDisponibles(psicologos.filter(p => !idsPsicologosOcupados.has(p.id)))
+            setPacientesDisponibles(pacientes.filter(p => !idsPacientesOcupados.has(p.id)))
+        } catch (error) {
+            console.error("Error al filtrar disponibles: ", error)
+        }
+    }
+
     useEffect(() => {
         let cancelado = false
         recalcularHorarios(fecha, idCubiculo, () => cancelado)
         return () => { cancelado = true }
     }, [fecha, idCubiculo])
+
+    useEffect(() => {
+        let cancelado = false
+        recalcularDisponibles(fecha, horaInicio, () => cancelado)
+        return () => { cancelado = true }
+    }, [fecha, horaInicio, psicologos, pacientes])
 
     const agendar = async () => {
         if (!fecha || !idCubiculo || !idPsicologo || !idPaciente || !horaInicio) {
@@ -166,7 +205,7 @@ export const useProgramarCita = (onClose: () => void, fechaInicial?: string) => 
     // props que los componentes necesitan
     return {
         // listas de DTOs
-        pacientes, psicologos, cubiculos,
+        pacientes: pacientesDisponibles, psicologos: psicologosDisponibles, cubiculos,
         // Variables de formulario y setters
         fecha, setFecha,
         horaInicio, setHoraInicio,

@@ -6,12 +6,17 @@ package org.itson.datos.interfaces;
 
 import org.itson.dominio.entidades.Psicologo;
 import java.util.List;
+import java.util.Optional;
 
 /**
  *
  * @author erika
  */
 public interface IPsicologoDAO {
+
     List<Psicologo> obtenerPsicologos();
+
     Psicologo registrarPsicologo(Psicologo psicologo);
+
+    Optional<Psicologo> findById(Long id);
 }

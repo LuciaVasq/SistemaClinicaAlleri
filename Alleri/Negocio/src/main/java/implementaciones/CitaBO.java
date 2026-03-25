@@ -14,6 +14,7 @@ import java.util.Optional;
 import org.itson.datos.interfaces.IAdeudoDAO;
 import org.itson.datos.interfaces.ICitaDAO;
 import org.itson.datos.interfaces.ICubiculoDAO;
+import org.itson.datos.interfaces.IPsicologoDAO;
 import org.itson.dominio.entidades.Adeudo;
 import org.itson.dominio.entidades.Cita;
 import org.itson.dominio.entidades.Psicologo;
@@ -37,6 +38,9 @@ public class CitaBO implements ICitaBO {
     private ICubiculoDAO cubiculoDAO;
 
     @Autowired
+    private IPsicologoDAO psicologoDAO;
+
+    @Autowired
     private CitaMapper citaMapper;
 
     @Autowired
@@ -54,7 +58,28 @@ public class CitaBO implements ICitaBO {
 
         Cita citanueva = citaMapper.toCita(nuevaCita);
         Cita guardada = citaDAO.agendarCita(citanueva);
-        adeudoDAO.actualizarAdeudo(List.of(guardada), guardada.getPsicologo().getId());
+        Optional<Psicologo> psicologo = psicologoDAO.findById(guardada.getPsicologo().getId());
+        if (!psicologo.isPresent()) {
+            throw new RuntimeException("Cita no encontrada");
+        }
+        Adeudo adeudo = psicologo.get().getAdeudo();
+        if (adeudo == null) {
+            adeudo = new Adeudo();
+            adeudo.setTotal(BigDecimal.ZERO);
+            psicologo.get().setAdeudo(adeudo);
+        }
+
+        BigDecimal rentaPorCita = new BigDecimal("100.00");
+        BigDecimal incremento = rentaPorCita.multiply(new BigDecimal(1)); // solo 1 cita
+
+        if (adeudo.getTotal() == null) {
+            adeudo.setTotal(BigDecimal.ZERO);
+        }
+
+        adeudo.setTotal(adeudo.getTotal().add(incremento));
+        guardada.setAdeudo(adeudo);
+        citaDAO.editarCita(guardada);
+        psicologoDAO.registrarPsicologo(psicologo.get());
 
         return citaMapper.toCTOCita(guardada);
     }
@@ -84,12 +109,15 @@ public class CitaBO implements ICitaBO {
         if (cita == null) {
             throw new RuntimeException("La cita debe existir para ser eliminada.");
         }
-        
+
         Optional<Cita> optional = citaDAO.findById(Long.valueOf(cita.getId()));
         if (!optional.isPresent()) {
             throw new RuntimeException("Cita no encontrada");
         }
         Cita existente = optional.get();
+        if (existente.getFechaHoraInicio().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("No se puede cancelar una cita que ya pasó.");
+        }
         Psicologo psicologo = existente.getPsicologo();
         Adeudo adeudo = psicologo.getAdeudo();
         if (adeudo != null && adeudo.getTotal() != null) {
