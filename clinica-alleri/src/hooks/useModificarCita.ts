@@ -3,13 +3,26 @@ import { catalogoService } from '../services/catalogoService'
 import { citaService } from '../services/citaService.ts'
 import type { PacienteDTO, PsicologoDTO, CubiculoDTO, CitaDTO } from '../types/alleri.types';
 
-const idRecepcionistaLogueado = 1; 
+const idRecepcionistaLogueado = 1;
 const nombreUsuarioLogueado = "recep1";
+
+const HORARIOS_CUBICULOS = [
+    "09:00", "10:00", "11:00", "12:00", "13:00",
+    "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"
+]
+
+function getFechaHoy(): string {
+    const ahora = new Date()
+    return `${ahora.getFullYear()}-${String(ahora.getMonth() + 1).padStart(2, '0')}-${String(ahora.getDate()).padStart(2, '0')}`
+}
 
 export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: () => void) => {
     const [pacientes, setPacientes] = useState<PacienteDTO[]>([])
     const [psicologos, setPsicologos] = useState<PsicologoDTO[]>([])
     const [cubiculos, setCubiculos] = useState<CubiculoDTO[]>([])
+
+    const horaInicioOriginal = citaActual.fechaHoraInicio?.split('T')[1]?.substring(0, 5) || ''
+    const [horariosDisponibles, setHorariosDisponibles] = useState<string[]>(HORARIOS_CUBICULOS)
 
     const [fecha, setFecha] = useState<string>(citaActual.fechaHoraInicio?.split('T')[0] || '')
     const [horaInicio, setHoraInicio] = useState<string>(citaActual.fechaHoraInicio?.split('T')[1]?.substring(0, 5) || '')
@@ -20,9 +33,10 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
 
     const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false)
     const [cargando, setCargando] = useState(false)
-    
+
     // NUEVO: Estado para manejar los errores visuales
     const [errores, setErrores] = useState<Record<string, string>>({})
+    const [errorPopup, setErrorPopup] = useState<string | null>(null)
 
     useEffect(() => {
         const cargarCatalogos = async () => {
@@ -41,6 +55,63 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
         }
         cargarCatalogos()
     }, [])
+
+    const recalcularHorarios = async (
+        fechaActual: string,
+        cubiculoActual: number | '',
+        isCancelled: () => boolean = () => false
+    ) => {
+        if (!fechaActual) return
+
+        let horasDisponiblesFiltradas = [...HORARIOS_CUBICULOS]
+
+        const fechaHoy = getFechaHoy()
+        if (fechaActual === fechaHoy) {
+            const ahora = new Date()
+            const horaAhora = `${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`
+            horasDisponiblesFiltradas = horasDisponiblesFiltradas.filter(h => h > horaAhora)
+        }
+
+        if (cubiculoActual !== '') {
+            try {
+                const citasDia = await citaService.obtenerCitasPorDia(fechaActual)
+                if (isCancelled()) return
+
+                const citasCubiculo = citasDia.filter(c => c.cubiculo?.id === Number(cubiculoActual))
+                const horasOcupadas = citasCubiculo
+                    .map(c => c.fechaHoraInicio.split('T')[1].substring(0, 5))
+                    .filter(h => h !== horaInicioOriginal) // excluye la hora propia de esta cita
+
+                horasDisponiblesFiltradas = horasDisponiblesFiltradas.filter(hora => !horasOcupadas.includes(hora))
+            } catch (error) {
+                console.error("Error al actualizar horarios: ", error)
+                return
+            }
+        }
+
+        if (isCancelled()) return
+
+        setHorariosDisponibles(horasDisponiblesFiltradas)
+
+        const horaSeleccionadaSigueDisponible = horasDisponiblesFiltradas.includes(horaInicio)
+        if (!horaSeleccionadaSigueDisponible) {
+            if (horasDisponiblesFiltradas.length === 0) {
+                setHoraInicio('')
+                setHoraFin('')
+            } else {
+                const nuevaHora = horasDisponiblesFiltradas[0]
+                setHoraInicio(nuevaHora)
+                const [h, m] = nuevaHora.split(":").map(Number)
+                setHoraFin(`${String((h + 1) % 24).padStart(2, "0")}:${String(m).padStart(2, "0")}`)
+            }
+        }
+    }
+
+    useEffect(() => {
+        let cancelado = false
+        recalcularHorarios(fecha, idCubiculo, () => cancelado)
+        return () => { cancelado = true }
+    }, [fecha, idCubiculo])
 
     // NUEVO: Función validadora
     const validarFormulario = () => {
@@ -74,7 +145,7 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
         const citaModificadaDTO: CitaDTO = {
             fechaHoraInicio: `${fecha}T${horaInicio}:00`,
             fechaHoraFin: `${fecha}T${horaFin}:00`,
-            precio: citaActual.precio || 100.00, 
+            precio: citaActual.precio || 100.00,
             cubiculo: { id: Number(idCubiculo), nombre: '' },
             psicologo: { id: Number(idPsicologo) },
             paciente: { id: Number(idPaciente), psicologo: { id: Number(idPsicologo) } },
@@ -86,7 +157,7 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
             setMostrarConfirmacion(true)
         } catch (error) {
             console.error(error);
-            alert('Error al conectar con el servidor. Revisa la consola.');
+            setErrorPopup('Error al conectar con el servidor. Revisa la consola.');
         } finally {
             setCargando(false)
         }
@@ -98,7 +169,8 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
         idCubiculo, setIdCubiculo, idPsicologo, setIdPsicologo, idPaciente, setIdPaciente,
         mostrarConfirmacion, setMostrarConfirmacion, cargando,
         guardarCambios,
-        errores 
-        
+        errores,
+        horariosDisponibles, setHorariosDisponibles,
+        errorPopup, setErrorPopup
     }
 }

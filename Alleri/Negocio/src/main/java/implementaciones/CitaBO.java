@@ -54,6 +54,7 @@ public class CitaBO implements ICitaBO {
 
         Cita citanueva = citaMapper.toCita(nuevaCita);
         Cita guardada = citaDAO.agendarCita(citanueva);
+        adeudoDAO.actualizarAdeudo(List.of(guardada), guardada.getPsicologo().getId());
 
         return citaMapper.toCTOCita(guardada);
     }

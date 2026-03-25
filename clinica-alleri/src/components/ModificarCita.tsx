@@ -19,12 +19,6 @@ const IconClose = () => (
     </svg>
 )
 
-// Constantes y función para la hora (Igual que en ProgramarCita)
-const HORAS = [
-    "08:00", "09:00", "10:00", "11:00", "12:00",
-    "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00",
-]
-
 function addHour(time: string): string {
     if (!time) return "--:--";
     const [h, m] = time.split(":").map(Number)
@@ -44,7 +38,9 @@ export default function ModificarCita({ citaActual, idCita, onClose }: Props) {
         idPaciente, setIdPaciente,
         mostrarConfirmacion, setMostrarConfirmacion,
         cargando, guardarCambios,
-        errores
+        errores,
+        horariosDisponibles,
+        errorPopup, setErrorPopup
     } = useModificarCita(citaActual, idCita, onClose);
 
     // Manejador idéntico al de ProgramarCita para calcular la hora de fin
@@ -54,15 +50,15 @@ export default function ModificarCita({ citaActual, idCita, onClose }: Props) {
         setHoraFin(addHour(nuevaHoraInicio));
     };
 
-const fechaDate = fecha ? new Date(fecha + 'T00:00:00') : null;
+    const fechaDate = fecha ? new Date(fecha + 'T00:00:00') : null;
 
-const handleFechaChange = (e: any) => {
+    const handleFechaChange = (e: any) => {
         if (e.value) {
             // Extraemos año, mes y día del objeto Date de PrimeReact
             const year = e.value.getFullYear();
             const month = String(e.value.getMonth() + 1).padStart(2, '0');
             const day = String(e.value.getDate()).padStart(2, '0');
-            
+
             // Lo guardamos como string "YYYY-MM-DD" para tu hook
             setFecha(`${year}-${month}-${day}`);
         } else {
@@ -102,7 +98,7 @@ const handleFechaChange = (e: any) => {
                                     className={`pc-calendar-custom ${errores.fecha ? 'p-invalid' : ''}`}
                                     readOnlyInput
                                     disabled={cargando}
-                                    style={{ width: '100%' }} 
+                                    style={{ width: '100%' }}
                                 />
                                 {errores.fecha && <span className="pc-error-text">{errores.fecha}</span>}
                             </div>
@@ -120,7 +116,7 @@ const handleFechaChange = (e: any) => {
                                         disabled={cargando}
                                     >
                                         <option value="">Selecciona...</option>
-                                        {HORAS.map((h) => (
+                                        {horariosDisponibles.map((h) => (
                                             <option key={h} value={h}>{h}</option>
                                         ))}
                                     </select>
@@ -224,6 +220,19 @@ const handleFechaChange = (e: any) => {
                         setMostrarConfirmacion(false);
                         onClose();
                     }} />
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {errorPopup && (
+                    <div className="pc-confirm-overlay" role="dialog" aria-modal>
+                        <div className="pc-confirm-card">
+                            <p className="pc-confirm-title">Aviso</p>
+                            <p className="pc-confirm-body">{errorPopup}</p>
+                            <button className="pc-btn-accept" onClick={() => setErrorPopup(null)}>
+                                Aceptar
+                            </button>
+                        </div>
+                    </div>
                 )}
             </AnimatePresence>
         </>

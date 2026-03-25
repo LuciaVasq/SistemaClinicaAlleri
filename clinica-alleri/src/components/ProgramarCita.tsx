@@ -79,7 +79,8 @@ export default function ProgramarCita({ onClose, fechaInicial }: ProgramarCitaPr
         mostrarConfirmacion, setMostrarConfirmacion,
         cargando,
         agendar,
-        horariosDisponibles
+        horariosDisponibles,
+        errorPopup, setErrorPopup
     } = useProgramarCita(onClose, fechaInicial)
 
 
@@ -101,14 +102,14 @@ export default function ProgramarCita({ onClose, fechaInicial }: ProgramarCitaPr
     }
 
     useEffect(() => {
-    if (!fecha) { 
-        const hoy = new Date();
-        const yyyy = hoy.getFullYear()
-        const mm = String(hoy.getMonth() + 1).padStart(2, '0')
-        const dd = String(hoy.getDate()).padStart(2, '0')
-        setFecha(`${yyyy}-${mm}-${dd}`)
-    }
-}, [])
+        if (!fecha) {
+            const hoy = new Date();
+            const yyyy = hoy.getFullYear()
+            const mm = String(hoy.getMonth() + 1).padStart(2, '0')
+            const dd = String(hoy.getDate()).padStart(2, '0')
+            setFecha(`${yyyy}-${mm}-${dd}`)
+        }
+    }, [])
 
     return (
         <>
@@ -144,7 +145,7 @@ export default function ProgramarCita({ onClose, fechaInicial }: ProgramarCitaPr
                         <label className="pc-label">Cubículo</label>
                         <select
                             className="pc-select"
-                            value={idCubiculo}                         
+                            value={idCubiculo}
                             onChange={(e) => setIdCubiculo(e.target.value === "" ? "" : Number(e.target.value))}
                             disabled={cargando}
                         >
@@ -174,14 +175,14 @@ export default function ProgramarCita({ onClose, fechaInicial }: ProgramarCitaPr
                         </div>
                     </div>
 
-                    
+
 
                     {/* Psicólogo (LLENADO DESDE SPRING BOOT) */}
                     <div className="pc-field">
                         <label className="pc-label">Psicólogo</label>
                         <select
                             className="pc-select"
-                            value={idPsicologo}                          
+                            value={idPsicologo}
                             onChange={(e) => setIdPsicologo(e.target.value === "" ? "" : Number(e.target.value))}
                             disabled={cargando}
                         >
@@ -235,6 +236,19 @@ export default function ProgramarCita({ onClose, fechaInicial }: ProgramarCitaPr
                         setMostrarConfirmacion(false);
                         onClose();
                     }} />
+                )}
+            </AnimatePresence>
+            <AnimatePresence>
+                {errorPopup && (
+                    <div className="pc-confirm-overlay" role="dialog" aria-modal>
+                        <div className="pc-confirm-card">
+                            <p className="pc-confirm-title">Aviso</p>
+                            <p className="pc-confirm-body">{errorPopup}</p>
+                            <button className="pc-btn-accept" onClick={() => setErrorPopup(null)}>
+                                Aceptar
+                            </button>
+                        </div>
+                    </div>
                 )}
             </AnimatePresence>
         </>

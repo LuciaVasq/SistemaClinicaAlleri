@@ -41,6 +41,8 @@ export const useProgramarCita = (onClose: () => void, fechaInicial?: string) => 
     const [mostrarConfirmacion, setMostrarConfirmacion] = useState(false)
     const [cargando, setCargando] = useState(false)
 
+    const [errorPopup, setErrorPopup] = useState<string | null>(null)
+
 
     // recupera los datos del back al abrir el formulario de registro de cita
     useEffect(() => {
@@ -123,7 +125,7 @@ export const useProgramarCita = (onClose: () => void, fechaInicial?: string) => 
 
     const agendar = async () => {
         if (!fecha || !idCubiculo || !idPsicologo || !idPaciente || !horaInicio) {
-            alert('Favor de llenar todos los campos.')
+            setErrorPopup('Favor de llenar todos los campos.')
             return
         }
         setCargando(true)
@@ -134,7 +136,7 @@ export const useProgramarCita = (onClose: () => void, fechaInicial?: string) => 
             const horasOcupadas = citasCubiculo.map(c => c.fechaHoraInicio.split('T')[1].substring(0, 5))
 
             if (horasOcupadas.includes(horaInicio)) {
-                alert('Ese horario ya fue ocupado en este cubículo. Por favor, selecciona otra hora.')
+                setErrorPopup('Ese horario ya fue ocupado en este cubículo. Por favor, selecciona otra hora.')
                 setHorariosDisponibles(prev => prev.filter(h => h !== horaInicio))
                 setHoraInicio('')
                 setHoraFin('')
@@ -156,7 +158,7 @@ export const useProgramarCita = (onClose: () => void, fechaInicial?: string) => 
             await recalcularHorarios(fecha, idCubiculo)
             setMostrarConfirmacion(true)
         } catch (error) {
-            alert('Error al agendar cita')
+            setErrorPopup('Error al agendar cita')
         } finally {
             setCargando(false)
         }
@@ -178,8 +180,8 @@ export const useProgramarCita = (onClose: () => void, fechaInicial?: string) => 
         // Funciones que llaman al back
         agendar,
         //Estados de horarios
-        horariosDisponibles, setHorariosDisponibles
-
+        horariosDisponibles, setHorariosDisponibles,
+        errorPopup, setErrorPopup
     }
 }
 
