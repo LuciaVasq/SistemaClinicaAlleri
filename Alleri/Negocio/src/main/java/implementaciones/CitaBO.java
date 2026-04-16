@@ -1,12 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package implementaciones;
 
 import IMappers.AdeudoMapper;
 import IMappers.CitaMapper;
 import interfaces.ICitaBO;
+import interfaces.IMensajeroBO;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,9 +33,11 @@ public class CitaBO implements ICitaBO {
     private IAdeudoDAO adeudoDAO;
     @Autowired
     private ICubiculoDAO cubiculoDAO;
-
     @Autowired
     private IPsicologoDAO psicologoDAO;
+    
+    @Autowired
+    private IMensajeroBO mensajeroBO;
 
     @Autowired
     private CitaMapper citaMapper;
@@ -58,6 +57,7 @@ public class CitaBO implements ICitaBO {
 
         Cita citanueva = citaMapper.toCita(nuevaCita);
         Cita guardada = citaDAO.agendarCita(citanueva);
+        mensajeroBO.notificarNuevaCita(guardada);
         Optional<Psicologo> psicologo = psicologoDAO.findById(guardada.getPsicologo().getId());
         if (!psicologo.isPresent()) {
             throw new RuntimeException("Cita no encontrada");
@@ -80,6 +80,8 @@ public class CitaBO implements ICitaBO {
         guardada.setAdeudo(adeudo);
         citaDAO.editarCita(guardada);
         psicologoDAO.registrarPsicologo(psicologo.get());
+
+        
 
         return citaMapper.toCTOCita(guardada);
     }

@@ -38,6 +38,7 @@ public class CitaController {
     @PostMapping("/agendar")
     public ResponseEntity<CitaDTO> agendarCita(@RequestBody CitaDTO nuevaCita) {
         return ResponseEntity.ok(citaBO.agendarCita(nuevaCita));
+       
     }
 
     /**
