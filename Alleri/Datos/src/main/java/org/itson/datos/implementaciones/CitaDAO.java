@@ -38,8 +38,8 @@ public interface CitaDAO extends JpaRepository<Cita, Long>, ICitaDAO {
     default List<Cita> obtenerCitas(LocalDateTime dia) {
         LocalDateTime inicio = dia.withHour(0).withMinute(0);
         LocalDateTime fin = dia.withHour(23).withMinute(59);
-        return findByFechaHoraInicioBetween(inicio, fin);
+        return findByFechaHoraInicioBetweenOrderByFechaHoraInicioAsc(inicio, fin);
     }
 
-    List<Cita> findByFechaHoraInicioBetween(LocalDateTime inicio, LocalDateTime fin);
+    List<Cita> findByFechaHoraInicioBetweenOrderByFechaHoraInicioAsc(LocalDateTime inicio, LocalDateTime fin);
 }

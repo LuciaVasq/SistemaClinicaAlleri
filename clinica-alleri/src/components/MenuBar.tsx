@@ -204,7 +204,7 @@ export function MenuBar() {
 
         {/* Right */}
         <div className="navbar__right">
-          <span className="navbar__username">Usuario</span>
+          <span className="navbar__username">María García</span>
 
           <motion.div
             className="navbar__avatar"

@@ -57,7 +57,7 @@ public class CitaBO implements ICitaBO {
 
         Cita citanueva = citaMapper.toCita(nuevaCita);
         Cita guardada = citaDAO.agendarCita(citanueva);
-        mensajeroBO.notificarNuevaCita(guardada);
+        //mensajeroBO.notificarNuevaCita(guardada);
         Optional<Psicologo> psicologo = psicologoDAO.findById(guardada.getPsicologo().getId());
         if (!psicologo.isPresent()) {
             throw new RuntimeException("Cita no encontrada");
