@@ -7,6 +7,7 @@
     margin: 0 auto;                
     padding: 20px 40px;             
     gap: 20px;                     
+    flex-wrap: wrap;
 }
 
 .btn-programar-cita {
@@ -74,7 +75,7 @@
 
 .citas-programadas {
     display: grid;
-    grid-template-columns: repeat(4, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 16px;
     max-width: 1500px;  
     margin: 0 auto;     
@@ -106,7 +107,7 @@
     position: relative;
     user-select: none;
     height: 350px;
-    width: 330px;
+    width: 100%;
 }
 
 .apt-card--cancelled {
@@ -237,8 +238,10 @@
     padding: 32px 28px 28px;
     box-shadow: var(--alleri-popup-shadow);
     position: relative;
-    height: 460px;
-    width: 700px;
+    height: auto;
+    width: min(700px, calc(100vw - 32px));
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .popup__close {
@@ -391,4 +394,46 @@
 
 .popup__btn--edit:hover {
     background: var(--button-edit-hover);
+}
+
+@media (max-width: 900px) {
+    .citas-programadas {
+        padding: 20px;
+    }
+
+    .citas-programadas-header {
+        padding: 16px 20px;
+    }
+
+    .popup__body {
+        grid-template-columns: 1fr; 
+    }
+
+    .popup__total {
+        margin-top: 16px;
+    }
+}
+
+@media (max-width: 600px) {
+    .citas-programadas {
+        grid-template-columns: 1fr; 
+        padding: 12px;
+    }
+
+    .apt-card {
+        height: auto;      
+        min-height: 300px;
+    }
+
+    .popup {
+        padding: 24px 16px 20px;
+    }
+
+    .popup__cubiculo {
+        font-size: 24px;
+    }
+
+    .popup__actions {
+        grid-template-columns: 1fr;
+    }
 }
