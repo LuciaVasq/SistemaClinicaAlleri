@@ -7,6 +7,7 @@ package org.itson.dominio.entidades;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import org.itson.dominio.enumeradores.EstadoCita;
 
 /**
  *
@@ -23,6 +24,8 @@ public class Cita {
     private LocalDateTime fechaHoraInicio;
     private LocalDateTime fechaHoraFin;
     private BigDecimal precio;
+    @Enumerated(EnumType.STRING)
+    private EstadoCita estado = EstadoCita.ACTIVA;
 
     @ManyToOne
     @JoinColumn(name = "recepcionista_id", nullable = false)
@@ -127,4 +130,12 @@ public class Cita {
     public void setPago(Pago pago) {
         this.pago = pago;
     }    
+
+    public EstadoCita getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoCita estado) {
+        this.estado = estado;
+    }
 }

@@ -1,9 +1,11 @@
 package implementaciones;
 
+import Enumeradores.EstadoCitaDTO;
 import IMappers.AdeudoMapper;
 import IMappers.CitaMapper;
 import interfaces.ICitaBO;
 import interfaces.IMensajeroBO;
+import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +17,7 @@ import org.itson.datos.interfaces.IPsicologoDAO;
 import org.itson.dominio.entidades.Adeudo;
 import org.itson.dominio.entidades.Cita;
 import org.itson.dominio.entidades.Psicologo;
+import org.itson.dominio.enumeradores.EstadoCita;
 import org.itson.dto.AdeudoDTO;
 import org.itson.dto.CitaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +38,7 @@ public class CitaBO implements ICitaBO {
     private ICubiculoDAO cubiculoDAO;
     @Autowired
     private IPsicologoDAO psicologoDAO;
-    
+
     @Autowired
     private IMensajeroBO mensajeroBO;
 
@@ -80,8 +83,6 @@ public class CitaBO implements ICitaBO {
         guardada.setAdeudo(adeudo);
         citaDAO.editarCita(guardada);
         psicologoDAO.registrarPsicologo(psicologo.get());
-
-        
 
         return citaMapper.toCTOCita(guardada);
     }
@@ -166,4 +167,17 @@ public class CitaBO implements ICitaBO {
         Adeudo adeudoNuevo = adeudoDAO.registrarAdeudo(adeudoMapper.toAdeudo(adeudo));
         return adeudoMapper.toDTOAdeudo(adeudoNuevo);
     }
+
+    @Override
+    public CitaDTO cambiarEstado(Long idCita, EstadoCitaDTO nuevoEstado) {
+        Cita cita = citaDAO.findById(idCita).orElseThrow(() -> new EntityNotFoundException("La cita no existe"));
+        EstadoCita estadoEntidad = EstadoCita.valueOf(nuevoEstado.name());
+        if (cita.getEstado() == EstadoCita.CANCELADA && estadoEntidad == EstadoCita.ATENDIDA) {
+            throw new IllegalStateException("No se puede atender una cita que ya fue cancelada");
+        }
+        cita.setEstado(estadoEntidad);
+        Cita citaActualizada = citaDAO.editarCita(cita);
+        return citaMapper.toCTOCita(citaActualizada);
+    }
+
 }

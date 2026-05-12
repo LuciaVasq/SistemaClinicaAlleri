@@ -1,6 +1,7 @@
 // Definición de las DTOs
 export type EstadoDTO = 'ACTIVO' | 'INACTIVO'
 export type MetodoPagoDTO = 'EFECTIVO' | 'TARJETA' | 'TRANSFERENCIA'
+export type EstadoCitaDTO = 'PENDIENTE' | 'ATENDIDA' | 'PAGADA' | 'CANCELADA'
 
 export interface CubiculoDTO {
     id: number
@@ -61,6 +62,7 @@ export interface CitaDTO {
   fechaHoraFin: string    
   precio: number        
   recepcionista?: UsuarioDTO
+  estado: EstadoCitaDTO
   pago?: PagoDTO           
   adeudo?: AdeudoDTO       
 }

@@ -1,3 +1,4 @@
+org\itson\dominio\enumeradores\EstadoCita.class
 org\itson\dominio\enumeradores\MetodoPago.class
 org\itson\dominio\entidades\Cubiculo.class
 org\itson\dominio\entidades\Psicologo.class

@@ -47,6 +47,14 @@ export const citaService = {
         }
 
         return res.json();
+    },
+    cambiarEstadoCita: async (idCita: number, nuevoEstado: string) => {
+        const res = await fetch(`${API_BASE_URL}/citas/estado/${idCita}?nuevoEstado=${nuevoEstado}`, {
+            method: 'PATCH'
+        });
+        if (!res.ok) {
+            throw new Error('Error al cambiar el estado de la cita');
+        }
+        return res.json();
     }
-
 }

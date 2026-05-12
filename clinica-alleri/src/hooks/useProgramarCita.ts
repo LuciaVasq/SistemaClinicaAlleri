@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { catalogoService } from '../services/catalogoService'
 import { citaService } from '../services/citaService.ts'
-import type { PacienteDTO, PsicologoDTO, CubiculoDTO, CitaDTO } from '../types/alleri.types';
+import type { PacienteDTO, PsicologoDTO, CubiculoDTO, CitaDTO, EstadoCitaDTO } from '../types/alleri.types';
 
 // MOCK: LUEGO ACTUALIZAR CON USUARIO E ID LOGGEADOS EN EL SISTEMA 
 const idRecepcionistaLogueado = 1;
@@ -189,6 +189,7 @@ export const useProgramarCita = (onClose: () => void, fechaInicial?: string) => 
                 precio: 100.00,
                 cubiculo: { id: Number(idCubiculo), nombre: '' },
                 psicologo: { id: Number(idPsicologo) },
+                estado: 'ACTIVA' as EstadoCitaDTO,
                 paciente: { id: Number(idPaciente), psicologo: { id: Number(idPsicologo) } },
                 recepcionista: { id: idRecepcionistaLogueado, usuario: nombreUsuarioLogueado }
             }

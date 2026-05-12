@@ -4,6 +4,7 @@
  */
 package interfaces;
 
+import Enumeradores.EstadoCitaDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.itson.dto.AdeudoDTO;
@@ -21,4 +22,5 @@ public interface ICitaBO {
     void actualizarAdeudo(List<CitaDTO> citas, Long idPsicologo);
     AdeudoDTO obtenerAdeudo(Long idPsicologo);
     AdeudoDTO registrarAdeudo(AdeudoDTO adeudo);
+    CitaDTO cambiarEstado(Long idCita, EstadoCitaDTO nuevoEstado);
 }
