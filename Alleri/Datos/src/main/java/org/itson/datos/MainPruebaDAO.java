@@ -10,7 +10,6 @@
 //import org.itson.dominio.entidades.Pago;
 //import org.itson.dominio.entidades.Psicologo;
 //import org.itson.dominio.entidades.Recepcionista;
-//import org.itson.dominio.enumeradores.Estado;
 //import org.itson.dominio.enumeradores.MetodoPago;
 //import org.itson.datos.implementaciones.AdeudoDAO;
 //import org.itson.datos.implementaciones.CitaDAO;
@@ -22,6 +21,7 @@
 //import java.time.LocalDateTime;
 //import java.util.ArrayList;
 //import java.util.List;
+//import java.util.Optional;
 //import org.itson.datos.implementaciones.RecepcionistaDAO;
 //import org.itson.datos.interfaces.IAdeudoDAO;
 //import org.itson.datos.interfaces.ICitaDAO;
@@ -30,17 +30,18 @@
 //import org.itson.datos.interfaces.IPagoDAO;
 //import org.itson.datos.interfaces.IPsicologoDAO;
 //import org.itson.datos.interfaces.IRecepcionistaDAO;
+//import org.itson.dominio.enumeradores.Estado;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.CommandLineRunner;
 //import org.springframework.boot.SpringApplication;
 //import org.springframework.boot.autoconfigure.SpringBootApplication;
 //import org.springframework.boot.autoconfigure.domain.EntityScan;
 //import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-/**
- *
- * @author erika
- */
+//
+///**
+// *
+// * @author erika
+// */
 //@SpringBootApplication(scanBasePackages = {
 //    "org.itson.datos",
 //    "org.itson.dominio"
@@ -70,8 +71,8 @@
 //    @Autowired
 //    private IRecepcionistaDAO recepcionistaDAO;
 //
-////    @Autowired
-////    private jakarta.persistence.EntityManager entityManager;
+//    @Autowired
+//    private jakarta.persistence.EntityManager entityManager;
 //
 //    public static void main(String[] args) {
 //        SpringApplication.run(MainPruebaDAO.class, args);
@@ -79,6 +80,7 @@
 //
 //    @Override
 //    public void run(String... args) throws Exception {
+//        
 //        Adeudo adeudo = new Adeudo();
 //        adeudo.setTotal(BigDecimal.ZERO);
 //
@@ -99,12 +101,22 @@
 //        Paciente paciente = new Paciente();
 //        paciente.setNombre("Marisol");
 //        paciente.setApellidoPaterno("Ruiz");
-//        paciente.setApellidoMaterno("Pacheco");
-//        paciente.setCorreo("sol@help.com");
-//        paciente.setTelefono("6442222222");
+//        paciente.setApellidoMaterno("Gonsalez");
+//        paciente.setCorreo("Marisol@help.com");
+//        paciente.setTelefono("6442578211");
 //        paciente.setEstado(Estado.ACTIVO);
 //        paciente.setPsicologo(psicologoGuardado);
-//        Paciente pacienteGuardado = pacienteDAO.registrarPaciente(paciente);
+//        Paciente pacienteEditado = pacienteDAO.registrarPaciente(paciente);
+//        
+//        Paciente pacienteEditado = pacienteDAO.obtenerPaciente(3L);
+//        
+//        pacienteEditado.setEstado(Estado.INACTIVO);
+//        
+//        Paciente paceinteNuevoEstado = pacienteDAO.editarPaciente(pacienteEditado);
+//        
+//        Optional<Psicologo> psicologoEditado = psicologoDAO.findById(3L);
+//        psicologoEditado.get().setApellidoMaterno("Gonsalez");
+//        Psicologo psicologoAEditar = psicologoDAO.editarPsicologo(psicologoEditado.get());
 //
 //        BigDecimal precioCita = new BigDecimal("100");
 //        Adeudo adeudoPsicologo = psicologoGuardado.getAdeudo();

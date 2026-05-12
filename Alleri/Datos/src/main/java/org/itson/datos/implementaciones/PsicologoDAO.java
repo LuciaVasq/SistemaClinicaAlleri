@@ -4,6 +4,7 @@
  */
 package org.itson.datos.implementaciones;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.itson.dominio.entidades.Psicologo;
 import org.itson.datos.interfaces.IPsicologoDAO;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PsicologoDAO extends JpaRepository<Psicologo, Long>, IPsicologoDAO {
+    
     @Override
     default List<Psicologo> obtenerPsicologos() {
         return findAll();
@@ -24,4 +26,9 @@ public interface PsicologoDAO extends JpaRepository<Psicologo, Long>, IPsicologo
     default Psicologo registrarPsicologo(Psicologo psicologo) {
         return save(psicologo);
     }
+    
+    @Override
+    default Psicologo editarPsicologo(Psicologo psicologoEditado){
+        return save(psicologoEditado);
+    }   
 }

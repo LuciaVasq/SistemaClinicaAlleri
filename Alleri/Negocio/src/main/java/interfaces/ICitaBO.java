@@ -22,5 +22,4 @@ public interface ICitaBO {
     void actualizarAdeudo(List<CitaDTO> citas, Long idPsicologo);
     AdeudoDTO obtenerAdeudo(Long idPsicologo);
     AdeudoDTO registrarAdeudo(AdeudoDTO adeudo);
-    CitaDTO cambiarEstado(Long idCita, EstadoCitaDTO nuevoEstado);
 }

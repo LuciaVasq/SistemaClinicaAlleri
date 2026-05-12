@@ -50,7 +50,10 @@ export const citaService = {
     },
     cambiarEstadoCita: async (idCita: number, nuevoEstado: string) => {
         const res = await fetch(`${API_BASE_URL}/citas/estado/${idCita}?nuevoEstado=${nuevoEstado}`, {
-            method: 'PATCH'
+            method: 'PATCH',
+            headers: {
+                    'Content-Type': 'application/json'
+            }
         });
         if (!res.ok) {
             throw new Error('Error al cambiar el estado de la cita');

@@ -71,13 +71,4 @@ public class CitaController {
 
         return ResponseEntity.ok(eliminada);
     }
-
-    @PatchMapping("/{id}/estado")
-    public ResponseEntity<CitaDTO> actualizarEstado(
-            @PathVariable Long id,
-            @RequestParam EstadoCitaDTO nuevoEstado) {
-
-        CitaDTO actualizada = citaBO.cambiarEstado(id, nuevoEstado);
-        return ResponseEntity.ok(actualizada);
-    }
 }

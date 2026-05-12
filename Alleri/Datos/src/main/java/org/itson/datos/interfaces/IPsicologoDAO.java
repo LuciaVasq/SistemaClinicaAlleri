@@ -19,4 +19,6 @@ public interface IPsicologoDAO {
     Psicologo registrarPsicologo(Psicologo psicologo);
 
     Optional<Psicologo> findById(Long id);
+    
+    Psicologo editarPsicologo(Psicologo psicologoEditado);
 }
