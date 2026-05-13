@@ -1,5 +1,6 @@
 package org.itson.dto;
 
+import Enumeradores.EstadoCitaDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.math.BigDecimal;
@@ -20,8 +21,9 @@ public class CitaDTO {
     public UsuarioDTO recepcionista; 
     public PagoDTO pago; 
     public AdeudoDTO adeudo;
+    private EstadoCitaDTO estado;
 
-    public CitaDTO(int id, CubiculoDTO cubiculo, PacienteDTO paciente, PsicologoDTO psicologo, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, BigDecimal precio, UsuarioDTO recepcionista, PagoDTO pago, AdeudoDTO adeudo) {
+    public CitaDTO(int id, CubiculoDTO cubiculo, PacienteDTO paciente, PsicologoDTO psicologo, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, BigDecimal precio, UsuarioDTO recepcionista, PagoDTO pago, AdeudoDTO adeudo, EstadoCitaDTO estado) {
         this.id = id;
         this.cubiculo = cubiculo;
         this.paciente = paciente;
@@ -32,6 +34,7 @@ public class CitaDTO {
         this.recepcionista = recepcionista;
         this.pago = pago;
         this.adeudo = adeudo;
+        this.estado = estado;
     }
 
     public CitaDTO() {
@@ -115,5 +118,13 @@ public class CitaDTO {
 
     public void setAdeudo(AdeudoDTO adeudo) {
         this.adeudo = adeudo;
+    }
+
+    public EstadoCitaDTO getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoCitaDTO estado) {
+        this.estado = estado;
     }
 }

@@ -202,21 +202,26 @@
     margin-top: 5px;
 }
 
-.badge--pagado {
-    background: var(--alleri-badge-paid-bg);
+.badge--pagada {
+    background-color: var(--alleri-badge-paid-bg);
     color: var(--alleri-badge-paid-text);
+    border: 1px solid var(--alleri-badge-paid-text); 
 }
 
-.badge--cancelado {
+.badge--cancelada {
     background: var(--alleri-badge-cancel-bg);
     color: var(--alleri-badge-cancel-text);
 }
 
-.badge--pendiente {
+.badge--activa {
     background: var(--alleri-badge-pending-bg);
     color: var(--alleri-badge-pending-text);
 }
 
+.badge--atendida {
+    background-color: var(--alleri-badge-paid-bg);
+    color: var(--alleri-badge-paid-text);
+}
 
 .popup-overlay {
     position: fixed;

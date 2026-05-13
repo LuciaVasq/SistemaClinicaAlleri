@@ -6,10 +6,10 @@ import ModificarCita from "./ModificarCita";
 import ConfirmDeletePopup from "./ConfirmDeletePopup";
 
 import { citaService } from '../services/citaService.ts';
-import type { CitaDTO } from '../types/alleri.types';
+import type { CitaDTO, EstadoCitaDTO } from '../types/alleri.types';
 
 // estado de la cita
-export type AppointmentStatus = "Pagado" | "Cancelado" | "Pendiente"
+export type AppointmentStatus = "Activa" | "Pagada" | "Cancelada" | "Atendida"
 
 export interface Appointment {
     id?: number;
@@ -78,9 +78,10 @@ const IconPerson = () => (
 )
 
 const badgeClass: Record<AppointmentStatus, string> = {
-    Pagado: "badge badge--pagado",
-    Cancelado: "badge badge--cancelado",
-    Pendiente: "badge badge--pendiente",
+    Activa: "badge badge--activa",
+    Pagada: "badge badge--pagada",
+    Cancelada: "badge badge--cancelada",
+    Atendida: "badge badge--atendida",
 }
 
 function StatusBadge({ status }: { status: AppointmentStatus }) {
@@ -186,7 +187,7 @@ interface AppointmentCardProps {
 
 export function CitaCard({ apt, onEdit, onDelete, setErrorPopup }: AppointmentCardProps) {
     const [open, setOpen] = useState<boolean>(false)
-    const isCancelled = apt.status === "Cancelado"
+    const isCancelled = apt.status === "Cancelada"
 
     return (
         <>
@@ -236,8 +237,18 @@ export default function PantallaCitas() {
 
     const handleCancelar = async (id: number) => {
         try {
-            await citaService.eliminarCita(id);
-            setCitasBack(prev => prev.filter(c => c.id !== id));
+            const citaActual = citasBack.find(c => c.id === id);
+            if (!citaActual) return;
+            
+            const citaActualizadaDTO = {
+            ...citaActual.rawDto,
+            estado: "CANCELADA" as EstadoCitaDTO
+            };
+
+            await citaService.modificarCita(id, citaActualizadaDTO);
+            setCitasBack(prev => prev.map(c => 
+            c.id === id ? { ...c, status: "Cancelada" } : c
+            ));
         } catch (error: any) {
             console.error("Error eliminando:", error);
 
@@ -289,7 +300,9 @@ export default function PantallaCitas() {
                     paciente: `${cita.paciente?.nombre || ''} ${cita.paciente?.apellidoPaterno || ''}`,
                     horaInicio,
                     horaFin,
-                    status: "Pendiente",
+                    status: cita.estado === 'PAGADA' ? "Pagada" :
+                            cita.estado === 'CANCELADA' ? "Cancelada" :
+                            cita.estado === 'ATENDIDA' ? "Atendida" : "Activa", 
                     totalRenta: cita.precio
                 }
             })

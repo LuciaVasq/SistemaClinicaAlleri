@@ -4,6 +4,7 @@
  */
 package interfaces;
 
+import Enumeradores.EstadoCitaDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.itson.dto.AdeudoDTO;

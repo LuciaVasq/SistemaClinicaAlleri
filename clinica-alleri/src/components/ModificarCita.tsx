@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import "../styles/ProgramarCita.css";
 import "primereact/resources/primereact.min.css";
 import { useModificarCita } from "../hooks/useModificarCita";
-import type { CitaDTO } from '../types/alleri.types';
+import type { CitaDTO, EstadoCitaDTO } from '../types/alleri.types';
 import ConfirmPopup from "./ConfirmPopup";
 import { Calendar } from "primereact/calendar";
 
@@ -36,6 +36,7 @@ export default function ModificarCita({ citaActual, idCita, onClose }: Props) {
         idCubiculo, setIdCubiculo,
         idPsicologo, setIdPsicologo,
         idPaciente, setIdPaciente,
+        estado, setEstado,
         mostrarConfirmacion, setMostrarConfirmacion,
         cargando, guardarCambios,
         errores,
@@ -187,6 +188,24 @@ export default function ModificarCita({ citaActual, idCita, onClose }: Props) {
                                 {errores.idPaciente && <span className="pc-error-text">{errores.idPaciente}</span>}
                             </div>
                         </div>
+
+                        {/* Estado de la Cita */}
+                        <div className="pc-field">
+                            <label className="pc-label">Estado de la cita</label>
+                            <div style={{ width: '100%' }}>
+                            <select
+                                className="pc-select"
+                                value={estado}
+                                onChange={(e) => setEstado(e.target.value as EstadoCitaDTO)}
+                                disabled={cargando}
+                            >
+                                <option value="ACTIVA">Activa</option>
+                                <option value="ATENDIDA">Atendida</option>
+                                <option value="PAGADA">Pagada</option>
+                            </select>
+                        </div>
+                        </div>
+                        
                     </div>
 
                     <div className="pc-total-row" style={{ marginTop: '20px' }}>

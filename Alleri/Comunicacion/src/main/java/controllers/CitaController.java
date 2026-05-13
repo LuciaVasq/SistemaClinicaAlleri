@@ -1,5 +1,6 @@
 package controllers;
 
+import Enumeradores.EstadoCitaDTO;
 import interfaces.ICitaBO;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +40,7 @@ public class CitaController {
     @PostMapping("/agendar")
     public ResponseEntity<CitaDTO> agendarCita(@RequestBody CitaDTO nuevaCita) {
         return ResponseEntity.ok(citaBO.agendarCita(nuevaCita));
-       
+
     }
 
     /**
@@ -69,5 +71,4 @@ public class CitaController {
 
         return ResponseEntity.ok(eliminada);
     }
-
 }

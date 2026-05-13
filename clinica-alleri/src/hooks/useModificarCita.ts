@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { catalogoService } from '../services/catalogoService'
 import { citaService } from '../services/citaService.ts'
-import type { PacienteDTO, PsicologoDTO, CubiculoDTO, CitaDTO } from '../types/alleri.types';
+import type { PacienteDTO, PsicologoDTO, CubiculoDTO, CitaDTO, EstadoCitaDTO } from '../types/alleri.types';
 
 const idRecepcionistaLogueado = 1;
 const nombreUsuarioLogueado = "recep1";
@@ -39,6 +39,8 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
 
     const [psicologosDisponibles, setPsicologosDisponibles] = useState<PsicologoDTO[]>([])
     const [pacientesDisponibles, setPacientesDisponibles] = useState<PacienteDTO[]>([])
+
+    const [estado, setEstado] = useState<EstadoCitaDTO>(citaActual.estado || 'ACTIVA')
 
     useEffect(() => {
         const cargarCatalogos = async () => {
@@ -193,6 +195,7 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
             precio: citaActual.precio || 100.00,
             cubiculo: { id: Number(idCubiculo), nombre: '' },
             psicologo: { id: Number(idPsicologo) },
+            estado: estado,
             paciente: { id: Number(idPaciente), psicologo: { id: Number(idPsicologo) } },
             recepcionista: { id: idRecepcionistaLogueado, usuario: nombreUsuarioLogueado }
         }
@@ -214,7 +217,7 @@ export const useModificarCita = (citaActual: CitaDTO, idCita: number, onClose: (
         idCubiculo, setIdCubiculo, idPsicologo, setIdPsicologo, idPaciente, setIdPaciente,
         mostrarConfirmacion, setMostrarConfirmacion, cargando,
         guardarCambios,
-        errores,
+        errores, estado, setEstado,
         horariosDisponibles, setHorariosDisponibles,
         errorPopup, setErrorPopup
     }
