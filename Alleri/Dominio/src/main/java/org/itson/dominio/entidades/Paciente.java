@@ -26,7 +26,7 @@ public class Paciente {
     private String correo;
     private String telefono;
     @Enumerated(EnumType.STRING)
-    private Estado estado;
+    private Estado estado = Estado.ACTIVO;
 
     @ManyToOne
     @JoinColumn(name = "psicologo_id", nullable = false)

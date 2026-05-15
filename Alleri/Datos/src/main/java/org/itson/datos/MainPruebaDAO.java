@@ -81,43 +81,64 @@
 //    @Override
 //    public void run(String... args) throws Exception {
 //        
+////        Paciente pacienteObtenido = pacienteDAO.obtenerPaciente(1L); 
+////        
+////        pacienteObtenido.setEstado(Estado.INACTIVO);
+////        Paciente pacienteActualizado = pacienteDAO.editarPaciente(pacienteObtenido);
+////        
+////        Optional<Psicologo> psicologoEditado = psicologoDAO.findById(2L);
+////        
+////        psicologoEditado.get().setEstado(Estado.ACTIVO);
+////        Psicologo psicologoActualizado = psicologoDAO.editarPsicologo(psicologoEditado.get());
+//        
+//        
 //        Adeudo adeudo = new Adeudo();
+//        adeudo.setTotal(BigDecimal.ZERO);
+//        
+//        Adeudo adeudo2 = new Adeudo();
 //        adeudo.setTotal(BigDecimal.ZERO);
 //
 //        Psicologo psicologo = new Psicologo();
 //        psicologo.setNombre("Lucia");
 //        psicologo.setApellidoPaterno("Vasquez");
 //        psicologo.setApellidoMaterno("Gastelum");
-//        psicologo.setCorreo("lucia@missi.com");
-//        psicologo.setTelefono("6441111111");
+//        psicologo.setCorreo("lucia@gmail.com");
+//        psicologo.setTelefono("64433333333");
 //        psicologo.setEstado(Estado.ACTIVO);
 //        psicologo.setAdeudo(adeudo); 
 //        Psicologo psicologoGuardado = psicologoDAO.registrarPsicologo(psicologo);
-//
-//        Cubiculo cubiculo = new Cubiculo();
-//        cubiculo.setNombre("Cubiculo 1");
-//        Cubiculo cubiculoGuardado = cubiculoDAO.registrarCubiculo(cubiculo);
+//        
+//        Psicologo psicologo2 = new Psicologo();
+//        psicologo2.setNombre("Pablo");
+//        psicologo2.setApellidoPaterno("Zamora");
+//        psicologo2.setApellidoMaterno("Gamez");
+//        psicologo2.setCorreo("pablo@gmail.com");
+//        psicologo2.setTelefono("644555555555");
+//        psicologo2.setAdeudo(adeudo2); 
+//        Psicologo psicologoGuardado2 = psicologoDAO.registrarPsicologo(psicologo2);
 //
 //        Paciente paciente = new Paciente();
 //        paciente.setNombre("Marisol");
 //        paciente.setApellidoPaterno("Ruiz");
 //        paciente.setApellidoMaterno("Gonsalez");
-//        paciente.setCorreo("Marisol@help.com");
-//        paciente.setTelefono("6442578211");
-//        paciente.setEstado(Estado.ACTIVO);
+//        paciente.setCorreo("Marisol@gmail.com");
+//        paciente.setTelefono("6441111111");
 //        paciente.setPsicologo(psicologoGuardado);
-//        Paciente pacienteEditado = pacienteDAO.registrarPaciente(paciente);
+//        Paciente pacienteG1 = pacienteDAO.registrarPaciente(paciente);
 //        
-//        Paciente pacienteEditado = pacienteDAO.obtenerPaciente(3L);
+//        Paciente paciente2 = new Paciente();
+//        paciente2.setNombre("Victoria");
+//        paciente2.setApellidoPaterno("Villalba");
+//        paciente2.setApellidoMaterno("Beltran");
+//        paciente2.setCorreo("Victoria@gmail.com");
+//        paciente2.setTelefono("644222222");
+//        paciente2.setPsicologo(psicologoGuardado);
+//        Paciente pacienteG2 = pacienteDAO.registrarPaciente(paciente2);
+//       
+//        Cubiculo cubiculo = new Cubiculo();
+//        cubiculo.setNombre("Cubiculo 1");
+//        Cubiculo cubiculoGuardado = cubiculoDAO.registrarCubiculo(cubiculo); 
 //        
-//        pacienteEditado.setEstado(Estado.INACTIVO);
-//        
-//        Paciente paceinteNuevoEstado = pacienteDAO.editarPaciente(pacienteEditado);
-//        
-//        Optional<Psicologo> psicologoEditado = psicologoDAO.findById(3L);
-//        psicologoEditado.get().setApellidoMaterno("Gonsalez");
-//        Psicologo psicologoAEditar = psicologoDAO.editarPsicologo(psicologoEditado.get());
-//
 //        BigDecimal precioCita = new BigDecimal("100");
 //        Adeudo adeudoPsicologo = psicologoGuardado.getAdeudo();
 //        adeudoPsicologo.setTotal(adeudoPsicologo.getTotal().add(precioCita));
@@ -132,7 +153,7 @@
 //        cita.setFechaHoraInicio(LocalDateTime.now());
 //        cita.setFechaHoraFin(LocalDateTime.now().plusHours(1));
 //        cita.setPrecio(precioCita);
-//        cita.setPaciente(pacienteGuardado);
+//        cita.setPaciente(paciente);
 //        cita.setPsicologo(psicologoGuardado);
 //        cita.setRecepcionista(recepcionista);
 //        cita.setCubiculo(cubiculoGuardado);
@@ -145,7 +166,7 @@
 //        pago.setConcepto("Pago de consulta");
 //        pago.setMetodoPago(MetodoPago.EFECTIVO);
 //        
-//        pago.setAdeudo(adeudoActualizado);
+////        pago.setAdeudo(adeudoActualizado);
 //        pago.setPsicologo(psicologoGuardado);
 //        pagoDAO.save(pago);
 //    }

@@ -1,0 +1,170 @@
+.reportes-container {
+    background-color: var(--app-background);
+    min-height: 81vh;
+    height: auto;
+    overflow-y: auto;
+}
+
+.reportes-wrapper {
+    max-width: 1500px; 
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.reportes-title-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 10px;
+}
+
+.reportes-title-row h1 {
+    font-size: 35px;
+    font-weight: 800;
+    color: var(--alleri-dark);
+    margin: 0;
+}
+
+.reportes-nav-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-reporte {
+    padding: 10px 24px;
+    border-radius: var(--alleri-radius-full);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.btn-reporte.active {
+    background-color: var(--alleri-primary);
+    color: var(--alleri-white);
+}
+
+.btn-reporte.inactive {
+    background-color: var(--alleri-primary-light);
+    color: var(--alleri-primary);
+}
+
+.btn-reporte:hover {
+    transform: scale(1.03);
+    opacity: 0.9;
+}
+
+.reportes-filters-container {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+}
+
+.reporte-fecha-field {
+    grid-template-columns: 70px 240px !important; 
+    margin-bottom: 0 !important;
+}
+
+.pc-calendar-custom .p-inputtext {
+    border: 1.5px solid var(--alleri-primary-light) !important; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.pc-calendar-custom .p-inputtext:focus {
+    border-color: var(--alleri-primary) !important;
+}
+
+.reporte-fecha-field .pc-label {
+    letter-spacing: 1px;
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+.reporte-fecha-item {
+    display: flex;
+    align-items: center;
+}
+
+
+.reportes-content-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1.0fr;
+    gap: 20px;
+}
+
+.report-card {
+    background: white; 
+    border-radius: var(--alleri-radius-xl);
+    padding: 28px;
+    box-shadow: var(--alleri-card-shadow);
+    min-height: 400px;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.report-table th {
+    text-align: left;
+    font-size: 13px;
+    color: var(--alleri-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    padding: 12px;
+    border-bottom: 2px solid var(--alleri-primary-light);
+}
+
+.report-table td {
+    padding: 16px 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--alleri-dark);
+    border-bottom: 1px solid var(--alleri-card-divider);
+}
+
+.occupation-badge {
+    background-color: var(--alleri-primary-light);
+    color: var(--alleri-primary);
+    padding: 4px 12px;
+    border-radius: var(--alleri-radius-full);
+    font-size: 14px;
+}
+
+@media (max-width: 1100px) {
+    .reportes-content-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .reportes-filters-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    .reportes-wrapper {
+        padding: 20px;
+    }
+    .reportes-title-row h1 {
+        font-size: 28px;
+    }
+    .reportes-nav-buttons {
+        width: 100%;
+        flex-direction: column;
+    }
+    .btn-reporte {
+        width: 100%;
+    }
+}

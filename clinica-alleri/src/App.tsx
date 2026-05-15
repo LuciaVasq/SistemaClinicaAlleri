@@ -1,15 +1,34 @@
 
 import './App.css'
+import { useState } from "react";
 import { MenuBar } from './components/MenuBar'
 import PantallaCitas from './components/PantallaCitas'
+import Reportes from "./components/Reportes";
 
 export default function App() {
-  return (
-    <div className='app-container'>
-      <MenuBar />
-      <PantallaCitas />
-    </div>
+  const [activeItem, setActiveItem] = useState<string>("#citas");
 
-  )
+  return (
+    <div className="app-container">
+      <MenuBar 
+        activeItem={activeItem} 
+        onSectionChange={setActiveItem} 
+      />
+
+      <main className="main-content">
+        {activeItem === "#citas" && (
+          <PantallaCitas />
+        )}
+
+        {activeItem === "#reportes" && (
+          <Reportes />
+        )}
+
+        {/* Mensajes temporales para las otras pantallas */}
+        {activeItem === "#pacientes" && <div style={{padding: "100px"}}>Próximamente: Pacientes</div>}
+        {activeItem === "#psicologos" && <div style={{padding: "100px"}}>Próximamente: Psicólogos</div>}
+      </main>
+    </div>
+  );
 }
 

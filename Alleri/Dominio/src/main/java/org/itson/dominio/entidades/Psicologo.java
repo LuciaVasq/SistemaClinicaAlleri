@@ -26,7 +26,7 @@ public class Psicologo {
     private String correo;
     private String telefono;
     @Enumerated(EnumType.STRING)
-    private Estado estado;
+    private Estado estado = Estado.ACTIVO;
 
     @OneToMany(mappedBy = "psicologo")
     private List<Paciente> pacientes;

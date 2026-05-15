@@ -184,10 +184,14 @@ function Sidebar({ activeItem, onSelect, onClose }: SidebarProps): JSX.Element {
   );
 }
 
+interface MenuBarProps {
+  activeItem: string;
+  onSectionChange: (href: string) => void;
+}
+
 // navbar
-export function MenuBar() {
-  const [menuOpen, setMenuOpen]     = useState<boolean>(false);
-  const [activeItem, setActiveItem] = useState<string>("#citas");
+export function MenuBar({ activeItem, onSectionChange }: MenuBarProps) {
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   return (
     <>
@@ -230,8 +234,8 @@ export function MenuBar() {
           <>
             <Overlay onClick={() => setMenuOpen(false)} />
             <Sidebar
-              activeItem={activeItem}
-              onSelect={setActiveItem}
+              activeItem={activeItem} 
+              onSelect={onSectionChange} 
               onClose={() => setMenuOpen(false)}
             />
           </>
