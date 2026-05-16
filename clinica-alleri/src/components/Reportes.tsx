@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Calendar } from "primereact/calendar";
 import { Bar } from "react-chartjs-2";
 import {
@@ -11,6 +11,14 @@ import {
   Legend,
 } from "chart.js";
 import "../styles/Reportes.css";
+import { citaService } from "../services/citaService.ts";
+import type {
+  CitaDTO,
+  CubiculoDTO,
+  PsicologoDTO,
+} from "../types/alleri.types.ts";
+import { catalogoService } from "../services/catalogoService.ts";
+import iconAlleri from "../assets/alleri-icon.png";
 
 ChartJS.register(
   CategoryScale,
@@ -22,14 +30,14 @@ ChartJS.register(
 );
 
 const IconPrint = () => (
-  <svg 
-    width="20" 
-    height="20" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
     strokeLinejoin="round"
   >
     <polyline points="6 9 6 2 18 2 18 9" />
@@ -38,30 +46,177 @@ const IconPrint = () => (
   </svg>
 );
 
+// Función para obtener citas en un rango de fechas
+const obtenerCitasRango = async (inicio: Date, fin: Date) => {
+  const citasTotales: CitaDTO[] = [];
+  let fechaActual = new Date(inicio);
+
+  while (fechaActual <= fin) {
+    const isoFecha = fechaActual.toISOString().split("T")[0];
+    const citasDia = await citaService.obtenerCitasPorDia(isoFecha);
+    citasTotales.push(...citasDia);
+
+    fechaActual.setDate(fechaActual.getDate() + 1);
+  }
+  return citasTotales;
+};
+
+// Función para generar datos de reporte por cubículo
+const generarDatosCubiculos = (citas: CitaDTO[],cubiculos: CubiculoDTO[],diasDiferencia: number) => {
+  const diasContados = diasDiferencia + 1;
+  const HORAS_LABORALES_POR_DIA = 8;
+
+  return cubiculos.map((cub: CubiculoDTO) => {
+    const citasEnCub = citas.filter(
+      (c) =>
+        c.cubiculo.id === cub.id &&
+        (c.estado?.toLowerCase() === "atendida" ||
+          c.estado?.toLowerCase() === "pagada"),
+    );
+    const horasOcupadas = citasEnCub.length;
+    const horasDisponibles = diasContados * HORAS_LABORALES_POR_DIA - horasOcupadas;
+    const porcentaje = horasDisponibles > 0 ? ((horasOcupadas / horasDisponibles) * 100).toFixed(1) : "0";
+
+    return {
+      nombre: cub.nombre,
+      horasDisponibles: `${horasDisponibles} hrs`,
+      horasOcupadas: `${horasOcupadas} hrs`,
+      porcentaje: `${porcentaje}%`,
+      atendidas: horasOcupadas,
+      canceladas: citas.filter( (c) => c.cubiculo.id === cub.id && c.estado?.toLowerCase() === "cancelada").length,
+    };
+  });
+};
+
+// Función para generar datos de reporte por psicólogo
+const generarDatosPsicologos = (citas: CitaDTO[], psicologos: PsicologoDTO[]) => {
+  return psicologos.map((psico) => {
+    const citasPsico = citas.filter((c) => c.psicologo.id === psico.id);
+
+    const atendidas = citasPsico.filter((c) => c.estado?.toLowerCase() === "atendida" || c.estado?.toLowerCase() === "pagada").length;
+
+    const canceladas = citasPsico.filter((c) => c.estado?.toLowerCase() === "cancelada").length;
+
+    return {
+      nombre: `${psico.nombre} ${psico.apellidoPaterno}`,
+      atendidas: atendidas,
+      canceladas: canceladas,
+      total: citasPsico.length,
+    };
+  });
+};
+
 export default function Reportes() {
   const [fechaDesde, setFechaDesde] = useState<Date | null>(null);
   const [fechaHasta, setFechaHasta] = useState<Date | null>(null);
-  const [reporteActivo, setReporteActivo] = useState<"citas" | "cubiculos">(
-    "cubiculos",
-  );
+  const [reporteActivo, setReporteActivo] = useState<"citas" | "cubiculos"> ("cubiculos");
 
-  // Configuración básica de la gráfica
-  const data = {
-    labels: ["C1", "C2", "C3", "C4", "C5", "C6"],
+  const [cargando, setCargando] = useState(false);
+  const [datosFinales, setDatosFinales] = useState<any[]>([]);
+
+  const fetchReportes = async () => {
+    if (!fechaDesde || !fechaHasta) return;
+    setCargando(true);
+    try {
+      const [citas, cubiculos, psicologos] = await Promise.all([
+        obtenerCitasRango(fechaDesde, fechaHasta),
+        catalogoService.obtenerCubiculos(),
+        catalogoService.obtenerPsicologos(),
+      ]);
+
+      const diffTime = Math.abs(fechaHasta.getTime() - fechaDesde.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (reporteActivo === "cubiculos") {
+        setDatosFinales(generarDatosCubiculos(citas, cubiculos, diffDays));
+      } else {
+        setDatosFinales(generarDatosPsicologos(citas, psicologos));
+      }
+    } catch (error) {
+      console.error("Error al generar reporte:", error);
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  const handlePrint = () => {
+  if (datosFinales.length === 0) {
+    alert("No hay datos para imprimir.");
+    return;
+  }
+  const originalTitle = document.title;
+  const hoy = new Date().toISOString().split('T')[0];
+  const ahora = new Date();
+  const timestamp = `${ahora.getHours()}-${ahora.getMinutes()}`;
+  const nombreReporte = reporteActivo === "cubiculos" ? "Cubiculos" : "Psicologos";
+  document.title = `Reporte_${nombreReporte}_${hoy}_${timestamp}`;
+  window.print();
+  document.title = originalTitle;
+};
+
+  useEffect(() => {
+    fetchReportes();
+  }, [fechaDesde, fechaHasta, reporteActivo]);
+
+  const dataChart = {
+    labels: datosFinales.map((d) => d.nombre),
     datasets: [
       {
-        label: "Citas",
-        data: [12, 19, 3, 5, 2, 3],
+        label:
+          reporteActivo === "cubiculos" ? "Horas Ocupadas" : "Citas Atendidas",
+        data: datosFinales.map((d) => d.atendidas),
         backgroundColor: "#6B3FA0",
         borderRadius: 8,
       },
+      ...(reporteActivo === "citas" ? [{
+          label: "Citas Canceladas",
+          data: datosFinales.map((d) => d.canceladas),
+          backgroundColor: "#DAC5ED",
+          borderRadius: 8,
+        }] 
+      : [])
     ],
+  };
+
+  const options = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        stepSize: 1,
+        callback: function(value: any) {
+          if (Math.floor(value) === value) {
+            return value;
+            }
+          },
+        },
+      },
+    },
   };
 
   return (
     <div className="reportes-container">
       <div className="reportes-wrapper">
         <div className="reportes-title-row">
+          <div className="only-print header-pdf">
+            <div className="header-pdf-left">
+              <img src={iconAlleri} alt="Logo Alleri" className="pdf-logo" />
+              <div className="header-pdf-info">
+                {reporteActivo === "cubiculos" ? (
+                  <h2>Reporte de Ocupación de Cubículos</h2>
+                ) : (
+                  <h2>Reporte de Citas por Psicólogo</h2>
+                )}
+                <span>Periodo: {fechaDesde?.toLocaleDateString()} - {fechaHasta?.toLocaleDateString()}</span>
+              </div>
+            </div>
+            <div className="header-pdf-right">
+              <h1 className="pdf-main-title">Reportes</h1>
+            </div>
+          </div>
+
           <h1>Reportes</h1>
           <div className="reportes-nav-buttons">
             <button
@@ -76,69 +231,98 @@ export default function Reportes() {
             >
               Reporte de cubículos
             </button>
-            <button className="btn-nav"><IconPrint /></button>
+            <button className="btn-nav" onClick={() => {
+              if (datosFinales.length === 0) {
+                
+              } else {
+                handlePrint();
+              }
+            }}
+            >
+              <IconPrint />
+            </button>
           </div>
         </div>
+
         <div className="reportes-filters-container">
           <div className="pc-field reporte-fecha-field">
             <label className="pc-label">DESDE</label>
-            <div style={{ width: "100%" }}>
-              <Calendar
-                value={fechaDesde}
-                onChange={(e) => setFechaDesde(e.value as Date)}
-                dateFormat="dd 'de' MM 'de' yy"
-                showIcon
-                className="pc-calendar-custom"
-                placeholder="Selecciona fecha"
-                readOnlyInput
-              />
-            </div>
+            <Calendar
+              value={fechaDesde}
+              onChange={(e) => setFechaDesde(e.value as Date)}
+              dateFormat="dd 'de' MM 'de' yy"
+              showIcon
+              className="pc-calendar-custom"
+              readOnlyInput
+            />
           </div>
 
           <div className="pc-field reporte-fecha-field">
             <label className="pc-label">HASTA</label>
-            <div style={{ width: "100%" }}>
-              <Calendar
-                value={fechaHasta}
-                onChange={(e) => setFechaHasta(e.value as Date)}
-                dateFormat="dd 'de' MM 'de' yy"
-                showIcon
-                className="pc-calendar-custom"
-                placeholder="Selecciona fecha"
-                readOnlyInput
-              />
-            </div>
+            <Calendar
+              value={fechaHasta}
+              onChange={(e) => setFechaHasta(e.value as Date)}
+              dateFormat="dd 'de' MM 'de' yy"
+              showIcon
+              className="pc-calendar-custom"
+              readOnlyInput
+            />
           </div>
         </div>
+
         <div className="reportes-content-grid">
           <div className="report-card">
-            <Bar
-              data={data}
-              options={{ responsive: true, maintainAspectRatio: false }}
-            />
+            {reporteActivo && datosFinales.length > 0 ? (
+            <Bar data={dataChart} options={options} />
+            ) : (
+            <div className="mensaje-espera">
+              <p>Esperando selección de fechas...</p>
+            </div>
+            )}
           </div>
 
           <div className="report-card">
             <table className="report-table">
               <thead>
                 <tr>
-                  <th>Cubículo</th>
-                  <th>Horas Disp.</th>
-                  <th>Horas Ocup.</th>
-                  <th>% Ocupación</th>
+                  <th>
+                    {reporteActivo === "cubiculos" ? "Cubículo" : "Psicólogo"}
+                  </th>
+                  <th>
+                    {reporteActivo === "cubiculos" ? "Horas Disp." : "Atendidas"}
+                  </th>
+                  <th>
+                    {reporteActivo === "cubiculos" ? "Horas Ocup." : "Canceladas"}
+                  </th>
+                  <th>
+                    {reporteActivo === "cubiculos" ? "% Ocupación" : null}
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <strong>Cubículo 1</strong>
-                  </td>
-                  <td>40 hrs</td>
-                  <td>32 hrs</td>
-                  <td>
-                    <span className="occupation-badge">80%</span>
-                  </td>
-                </tr>
+                {datosFinales.map((fila, index) => (
+                  <tr key={index}>
+                    <td>
+                      <strong>{fila.nombre}</strong>
+                    </td>
+                    {reporteActivo === "cubiculos" ? (
+                      <>
+                        <td>{fila.horasDisponibles}</td>
+                        <td>{fila.horasOcupadas}</td>
+                        <td>
+                          <span className="occupation-badge">
+                            {fila.porcentaje}
+                          </span>
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td>{fila.atendidas}</td>
+                        <td>{fila.canceladas}</td>
+                      </>
+                    )}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
