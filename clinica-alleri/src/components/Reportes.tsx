@@ -110,13 +110,19 @@ export default function Reportes() {
   const [fechaDesde, setFechaDesde] = useState<Date | null>(null);
   const [fechaHasta, setFechaHasta] = useState<Date | null>(null);
   const [reporteActivo, setReporteActivo] = useState<"citas" | "cubiculos"> ("cubiculos");
-
-  const [cargando, setCargando] = useState(false);
+  const [mostrarPopup, setMostrarPopup] = useState(false);
+  const [mostrarPopupPDF, setMostrarPopupPDF] = useState(false);
   const [datosFinales, setDatosFinales] = useState<any[]>([]);
 
   const fetchReportes = async () => {
     if (!fechaDesde || !fechaHasta) return;
-    setCargando(true);
+
+    if (fechaDesde > fechaHasta) {
+        setDatosFinales([]); 
+        setMostrarPopup(true); 
+        return;
+    }
+
     try {
       const [citas, cubiculos, psicologos] = await Promise.all([
         obtenerCitasRango(fechaDesde, fechaHasta),
@@ -135,7 +141,7 @@ export default function Reportes() {
     } catch (error) {
       console.error("Error al generar reporte:", error);
     } finally {
-      setCargando(false);
+      
     }
   };
 
@@ -233,7 +239,7 @@ export default function Reportes() {
             </button>
             <button className="btn-nav" onClick={() => {
               if (datosFinales.length === 0) {
-                
+                setMostrarPopupPDF(true);
               } else {
                 handlePrint();
               }
@@ -328,6 +334,36 @@ export default function Reportes() {
           </div>
         </div>
       </div>
+      {mostrarPopup && (
+        <div className="reportes-modal-overlay">
+          <div className="reportes-modal-box brand-modal">
+            <h2>Aviso</h2>
+            <p>
+              La fecha <strong>"DESDE"</strong> no puede ser posterior a la fecha <strong>"HASTA"</strong>.
+            </p>
+            <button className="btn-modal-aceptar" onClick={() => {
+              setMostrarPopup(false); 
+              setFechaDesde(null);   
+              setFechaHasta(null);    
+            }}>
+            Aceptar
+          </button>
+          </div>
+        </div>
+      )}
+      {mostrarPopupPDF && (
+        <div className="reportes-modal-overlay">
+          <div className="reportes-modal-box brand-modal">
+            <h2>Aviso</h2>
+            <p>
+              No hay datos para imprimir. Por favor, selecciona un rango de fechas válido.
+            </p>
+            <button className="btn-modal-aceptar" onClick={() => setMostrarPopupPDF(false)}>
+              Aceptar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -141,6 +141,82 @@
     font-size: 14px;
 }
 
+.reportes-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(2px); 
+}
+
+.reportes-modal-box.brand-modal {
+    background-color: #a3538a;
+    padding: 35px 40px;
+    border-radius: 28px; 
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    color: #ffffff; 
+    animation: popupOpen 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.reportes-modal-box.brand-modal h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.reportes-modal-box.brand-modal p {
+    color: rgba(255, 255, 255, 0.9); 
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+.btn-modal-aceptar {
+    background-color: #654380; 
+    color: #ffffff;
+    border: none;
+    padding: 12px 0;
+    width: 160px; 
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    outline: none;
+    display: inline-block;
+}
+
+.btn-modal-aceptar:hover {
+    background-color: #53356b; 
+}
+
+.btn-modal-aceptar:active {
+    transform: scale(0.96); 
+}
+
+@keyframes popupOpen {
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
 @media (max-width: 1100px) {
     .reportes-content-grid {
         grid-template-columns: 1fr;
