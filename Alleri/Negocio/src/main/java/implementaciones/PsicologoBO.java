@@ -38,4 +38,13 @@ public class PsicologoBO implements IPsicologoBO{
         Psicologo psicologoNuevo = psicologoDAO.registrarPsicologo(psicologoMapper.toPsicologo(psicologodto));
         return psicologoMapper.toDTOPsicologo(psicologoNuevo);
     }
+
+    @Override
+    public PsicologoDTO editarPsicologo(PsicologoDTO psicologodto) {
+        if (psicologodto == null) {
+            throw new RuntimeException("No se pudo actualizar el psicologo con exito.");
+        }
+        Psicologo psicologoEditado = psicologoDAO.editarPsicologo(psicologoMapper.toPsicologo(psicologodto));
+        return psicologoMapper.toDTOPsicologo(psicologoEditado);
+    }
 }

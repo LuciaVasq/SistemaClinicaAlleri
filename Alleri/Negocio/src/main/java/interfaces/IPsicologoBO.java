@@ -14,4 +14,5 @@ import org.itson.dto.PsicologoDTO;
 public interface IPsicologoBO {
     public List<PsicologoDTO> obtenerPsicologos();
     public PsicologoDTO registrarPsicologo(PsicologoDTO psicologodto);
+    public PsicologoDTO editarPsicologo(PsicologoDTO psicologodto);
 }

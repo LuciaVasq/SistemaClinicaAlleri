@@ -18,10 +18,30 @@ export const catalogoService = {
         return res.json()
     },
 
+    //PSICOLOGOS
     obtenerPsicologos: async (): Promise<PsicologoDTO[]> => {
         const res = await fetch(`${API_BASE_URL}/psicologos`)
         if (!res.ok) throw new Error('Error al obtener psicólogos')
         return res.json()
-    }
+    },
 
+    crearPsicologo: async (psicologo: PsicologoDTO): Promise<PsicologoDTO> => {
+        const res = await fetch(`${API_BASE_URL}/psicologos/registrar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(psicologo)
+        });
+        if (!res.ok) throw new Error('Error al registrar el psicólogo');
+        return res.json();
+    },
+
+    actualizarPsicologo: async (id: number, psicologo: PsicologoDTO): Promise<PsicologoDTO> => {
+        const res = await fetch(`${API_BASE_URL}/psicologos/actualizar/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(psicologo)
+        });
+        if (!res.ok) throw new Error('Error al actualizar el psicólogo');
+        return res.json();
+    }
 }

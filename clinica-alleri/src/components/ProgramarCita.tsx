@@ -180,14 +180,16 @@ export default function ProgramarCita({ onClose, fechaInicial }: ProgramarCitaPr
                             className="pc-select"
                             value={idPsicologo}
                             onChange={(e) => setIdPsicologo(e.target.value === "" ? "" : Number(e.target.value))}
-                            disabled={cargando}
-                        >
+                            disabled={cargando}>
                             <option value="">Selecciona un psicólogo...</option>
-                            {psicologos.map((p) => (
-                                <option key={p.id} value={p.id}>
-                                    {p.nombre} {p.apellidoPaterno}
-                                </option>
-                            ))}
+                            {psicologos
+                                .filter((p) => p.estado === 'ACTIVO')
+                                .map((p) => (
+                                    <option key={p.id} value={p.id}>
+                                        {p.nombre} {p.apellidoPaterno}
+                                    </option>
+                                ))
+                            }
                         </select>
                     </div>
 

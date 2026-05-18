@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MenuBar } from './components/MenuBar'
 import PantallaCitas from './components/PantallaCitas'
 import Reportes from "./components/Reportes";
+import PantallaPsicologos from "./components/PantallaPsicologos";
 
 export default function App() {
   const [activeItem, setActiveItem] = useState<string>("#citas");
@@ -24,9 +25,12 @@ export default function App() {
           <Reportes />
         )}
 
+        {activeItem === "#psicologos" && (
+          <PantallaPsicologos />
+        )}
+
         {/* Mensajes temporales para las otras pantallas */}
         {activeItem === "#pacientes" && <div style={{padding: "100px"}}>Próximamente: Pacientes</div>}
-        {activeItem === "#psicologos" && <div style={{padding: "100px"}}>Próximamente: Psicólogos</div>}
       </main>
     </div>
   );

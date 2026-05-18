@@ -1,0 +1,377 @@
+
+.admin-psico-container {
+    background-color: var(--app-background);
+    min-height: 81vh;
+    height: auto;
+    overflow-y: auto;
+}
+
+.admin-psico-wrapper {
+    max-width: 1500px; 
+    margin: 0 auto;
+    margin-top: -20px;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.search-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    flex-shrink: 0; 
+    margin-right: 4px;
+    user-select: none;
+}
+
+.admin-psico-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px; 
+    margin-top: 0;
+}
+
+.admin-psico-header h1 {
+    font-size: 35px;
+    font-weight: 800;
+    color: var(--alleri-dark);
+    margin: 0;
+}
+
+.btn-add-psico {
+    background-color: var(--button-violet);       
+    border: none;
+    color: var(--alleri-white);
+    cursor: pointer;
+    width: 100px;  
+    height: 100px;
+    border-radius: 50%;
+}
+
+.btn-add-psico:hover {
+    background-color: var(--button-violet-hover);
+}
+
+.btn-add-psico:active {
+    transform: scale(0.95);
+}
+
+.search-box-container {
+    background-color: white;
+    border-radius: 30px;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+    margin-bottom: 25px;
+}
+
+.search-icon {
+    font-size: 1.1rem;
+    color: #999;
+    user-select: none;
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+    color: #333333;
+    background: transparent !important; 
+    box-shadow: none !important; 
+}
+
+.search-input::placeholder {
+    color: #b3b3b3;
+    font-style: italic;
+}
+
+.psicologos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.psico-card {
+    background-color: #e9cee3;
+    border-radius: 16px;
+    padding: 16px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+    transition: transform 0.2s ease;
+}
+
+.psico-card:hover {
+    transform: translateY(-2px);
+}
+
+.psico-card-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.status-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.status-dot.active {
+    background-color: #5bb377; 
+}
+
+.status-dot.inactive {
+    background-color: #555555; 
+}
+
+.psico-info h3 {
+    margin: 0 0 6px 0;
+    color: #4a154b;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.psico-subtext {
+    display: flex;
+    gap: 35px;
+    color: #4f4f4f;
+    font-size: 0.95rem;
+}
+
+.psico-subtext p {
+    margin: 0;
+}
+
+.psico-card-actions {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: #4a154b;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    opacity: 0.75;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.action-btn:hover {
+    opacity: 1;
+}
+
+.action-btn:active {
+    transform: scale(0.95);
+}
+
+.action-btn .icon {
+    font-size: 1.4rem;
+}
+
+.action-btn.con-adeudo {
+    color: #b71c1c; 
+    opacity: 1;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--alleri-popup-overlay, rgba(0, 0, 0, 0.4));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2100; 
+    backdrop-filter: blur(4px); 
+}
+
+.modal-box-psico {
+    background: var(--alleri-magenta-popup); 
+    border-radius: 24px; 
+    padding: 45px 35px 35px;
+    max-width: 540px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15); 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px; 
+    position: relative;
+    animation: modalSlideUp 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-close-x {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: var(--alleri-white);
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.modal-close-x:hover {
+    opacity: 1;
+}
+
+.modal-box-psico h2 {
+    color: var(--alleri-white);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+}
+
+.form-field-grid {
+    display: grid;
+    grid-template-columns: 140px 1fr; 
+    align-items: center;
+    text-align: left;
+}
+
+.form-field-grid label {
+    font-size: 1.05rem;
+    color: var(--alleri-white);
+    font-weight: 500;
+}
+
+.form-field-grid input {
+    background-color: rgba(255, 255, 255, 0.2); 
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 1rem;
+    outline: none;
+    color: var(--alleri-white);
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.form-field-grid input:focus {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: var(--alleri-white);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.switch-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 60px;
+    user-select: none;
+}
+
+.switch-label {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.switch-label input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #bbbbbb; 
+    transition: .3s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+    background-color: #5bb377; 
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.switch-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4a154b;
+    opacity: 0.8;
+}
+
+/* Animations */
+@keyframes modalSlideUp {
+    from {
+        transform: scale(0.92);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 600px) {
+    .form-field-grid {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .psico-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .psico-card-actions {
+        width: 100%;
+        justify-content: space-around;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        padding-top: 12px;
+    }
+}
