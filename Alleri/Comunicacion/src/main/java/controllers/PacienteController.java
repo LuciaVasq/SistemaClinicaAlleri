@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +33,18 @@ public class PacienteController {
     @GetMapping
     public ResponseEntity<List<PacienteDTO>> obtenerPacientes(){
         return ResponseEntity.ok(pacienteBO.obtenerPacientes());
+    }
+    
+    @PostMapping("/registrar")
+    public ResponseEntity<PacienteDTO> registrarPaciente(@RequestBody PacienteDTO pacientedto) {
+        PacienteDTO nuevoPaciente = pacienteBO.registrarPaciente(pacientedto);
+        return ResponseEntity.ok(nuevoPaciente);
+    }
+    
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<PacienteDTO> editarPaciente(@PathVariable int id, @RequestBody PacienteDTO pacientedto) {
+        pacientedto.setId(id);
+        PacienteDTO pacienteEdit = pacienteBO.editarPaciente(pacientedto);
+        return ResponseEntity.ok(pacienteEdit);
     }
 }

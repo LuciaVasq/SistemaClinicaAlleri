@@ -43,5 +43,25 @@ export const catalogoService = {
         });
         if (!res.ok) throw new Error('Error al actualizar el psicólogo');
         return res.json();
-    }
+    },
+
+    crearPaciente: async (paciente: PacienteDTO): Promise<PacienteDTO> => {
+        const res = await fetch(`${API_BASE_URL}/pacientes/registrar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paciente)
+        });
+        if (!res.ok) throw new Error('Error al registrar el paciente');
+        return res.json();
+    },
+
+    actualizarPaciente: async (id: number, paciente: PacienteDTO): Promise<PacienteDTO> => {
+        const res = await fetch(`${API_BASE_URL}/pacientes/actualizar/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paciente)
+        });
+        if (!res.ok) throw new Error('Error al actualizar el paciente');
+        return res.json();
+    },
 }

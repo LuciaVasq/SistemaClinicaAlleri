@@ -36,4 +36,13 @@ public class PacienteBO implements IPacienteBO{
         Paciente pacienteNuevo = pacienteDAO.registrarPaciente(pacienteMapper.toPaciente(pacientedto));
         return pacienteMapper.toDTOPaciente(pacienteNuevo);
     }
+    
+    @Override
+    public PacienteDTO editarPaciente(PacienteDTO pacientedto) {
+        if(pacientedto == null) {
+            throw new RuntimeException("No se pudo editar el paciente con exito.");
+        }
+        Paciente pacienteEdit = pacienteDAO.editarPaciente(pacienteMapper.toPaciente(pacientedto));
+        return pacienteMapper.toDTOPaciente(pacienteEdit);
+    }
 }
